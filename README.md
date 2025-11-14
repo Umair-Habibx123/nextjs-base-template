@@ -1,4 +1,4 @@
-# 🚀 Next.js Base Template
+<!-- # 🚀 Next.js Base Template
 
 A modern **full-stack Next.js starter** featuring a clean architecture, reusable components, and a fully functional admin dashboard — perfect for building scalable web applications, SaaS platforms, and multi-language websites.
 
@@ -116,11 +116,11 @@ You can reuse or extend:
 
 **Umair Habib**
 💼 Full Stack Developer
-🐙 [GitHub Profile](https://github.com/Umair-Habibx123)
+🐙 [GitHub Profile](https://github.com/Umair-Habibx123) -->
 
 
 
-<!-- # 🚀 Next.js Base Template
+# 🚀 Next.js Base Template
 
 A modern **full-stack Next.js starter** featuring a clean architecture, reusable components, and a fully functional admin dashboard — perfect for building scalable web applications, SaaS platforms, and multi-language websites.
 
@@ -240,4 +240,4 @@ You can reuse or extend:
 🐙 [GitHub Profile](https://github.com/GalvanAI)
 
 
-````` -->
+`````
