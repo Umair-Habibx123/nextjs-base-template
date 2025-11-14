@@ -1,0 +1,83 @@
+@import "tailwindcss";
+@plugin "daisyui";
+@plugin "daisyui/theme" {
+  themes: all;
+  name: "custom";
+  default: true;
+  prefersdark: false;
+  color-scheme: "light";
+
+  /* Colors */
+  --color-base-100: oklch(98% 0.002 89.9);
+  --color-base-200: oklch(95% 0.004 89.9);
+  --color-base-300: oklch(90% 0.008 89.9);
+  --color-base-content: oklch(20% 0.015 240);
+
+  --color-primary: oklch(65% 0.2 250);
+  --color-secondary: oklch(60% 0.15 180);
+  --color-accent: oklch(70% 0.2 40);
+  --color-neutral: oklch(35% 0.02 250);
+
+  /* 🌐 General Utility */
+  --border: 1px;
+  --depth: 1;
+  --noise: 0;
+
+  /* 🟣 Radius */
+  --radius-box: 1rem;
+  --radius-card: 1rem;
+  --radius-modal: 0.75rem;
+  --radius-alert: 0.5rem;
+  --radius-field: 0.5rem;
+  --radius-button: 0.5rem;
+  --radius-input: 0.5rem;
+  --radius-select: 0.5rem;
+  --radius-tab: 0.5rem;
+  --radius-checkbox: 0.25rem;
+  --radius-toggle: 0.25rem;
+  --radius-badge: 0.25rem;
+
+  /* 🟢 Sizes */
+  --size-button: 1.25rem;
+  --size-input: 1.5rem;
+  --size-select: 1.5rem;
+  --size-tab: 1.5rem;
+  --size-checkbox: 1rem;
+  --size-toggle: 1rem;
+  --size-badge: 0.75rem;
+
+  /* Border width */
+  --border-width: 1px;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.4s ease-in-out;
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out;
+}
