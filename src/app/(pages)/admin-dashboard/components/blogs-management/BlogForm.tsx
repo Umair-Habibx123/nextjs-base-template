@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import { toast } from "react-toastify";
 import slugify from "slugify";
 import CreatableSelect from "react-select/creatable";
-import editorjsHTML from "editorjs-html";
+// import editorjsHTML from "editorjs-html";
 import {
   FileText,
   Image,
@@ -120,60 +120,60 @@ export default function BlogForm({ initialData, onSaved, onCancel }: any) {
 
     setErrors({});
 
-    const edjsParser = editorjsHTML({
-      // 🧩 Custom handler for linkTool
-      linkTool: (block: any) => {
-        const { link, meta } = block.data || {};
-        if (!link) return "";
-        const title = meta?.title || link;
-        const description = meta?.description || "";
-        const image = meta?.image?.url || meta?.image || "";
+    // const edjsParser = editorjsHTML({
+    //   // 🧩 Custom handler for linkTool
+    //   linkTool: (block: any) => {
+    //     const { link, meta } = block.data || {};
+    //     if (!link) return "";
+    //     const title = meta?.title || link;
+    //     const description = meta?.description || "";
+    //     const image = meta?.image?.url || meta?.image || "";
 
-        return `
-      <a href="${link}" target="_blank" rel="noopener noreferrer"
-        class="editorjs-link-block"
-        style="display:block;border:1px solid #ddd;padding:12px;border-radius:8px;text-decoration:none;color:inherit;">
-        ${
-          image
-            ? `<img src="${image}" alt="${title}" style="max-height:150px;width:100%;object-fit:cover;border-radius:6px;margin-bottom:8px;">`
-            : ""
-        }
-        <div style="font-weight:600;font-size:1rem;margin-bottom:4px;">${title}</div>
-        <div style="font-size:0.85rem;color:#555;">${description}</div>
-        <div style="font-size:0.8rem;color:#888;margin-top:4px;">${link}</div>
-      </a>
-    `;
-      },
+    //     return `
+    //   <a href="${link}" target="_blank" rel="noopener noreferrer"
+    //     class="editorjs-link-block"
+    //     style="display:block;border:1px solid #ddd;padding:12px;border-radius:8px;text-decoration:none;color:inherit;">
+    //     ${
+    //       image
+    //         ? `<img src="${image}" alt="${title}" style="max-height:150px;width:100%;object-fit:cover;border-radius:6px;margin-bottom:8px;">`
+    //         : ""
+    //     }
+    //     <div style="font-weight:600;font-size:1rem;margin-bottom:4px;">${title}</div>
+    //     <div style="font-size:0.85rem;color:#555;">${description}</div>
+    //     <div style="font-size:0.8rem;color:#888;margin-top:4px;">${link}</div>
+    //   </a>
+    // `;
+    //   },
 
-      // Optional: handle embeds gracefully
-      embed: (block: any) => {
-        const { service, embed } = block.data || {};
-        if (service === "youtube" || service === "vimeo") {
-          return `<iframe src="${embed}" frameborder="0" allowfullscreen style="width:100%;aspect-ratio:16/9;border-radius:8px;"></iframe>`;
-        }
-        return "";
-      },
+    //   // Optional: handle embeds gracefully
+    //   embed: (block: any) => {
+    //     const { service, embed } = block.data || {};
+    //     if (service === "youtube" || service === "vimeo") {
+    //       return `<iframe src="${embed}" frameborder="0" allowfullscreen style="width:100%;aspect-ratio:16/9;border-radius:8px;"></iframe>`;
+    //     }
+    //     return "";
+    //   },
 
-      // Optional: support tables
-      table: (block: any) => {
-        const rows = block.data.content || [];
-        return `
-      <table style="width:100%;border-collapse:collapse;border:1px solid #ddd;">
-        ${rows
-          .map(
-            (r: string[]) =>
-              `<tr>${r
-                .map(
-                  (c) =>
-                    `<td style="border:1px solid #ddd;padding:6px;">${c}</td>`
-                )
-                .join("")}</tr>`
-          )
-          .join("")}
-      </table>
-    `;
-      },
-    });
+    //   // Optional: support tables
+    //   table: (block: any) => {
+    //     const rows = block.data.content || [];
+    //     return `
+    //   <table style="width:100%;border-collapse:collapse;border:1px solid #ddd;">
+    //     ${rows
+    //       .map(
+    //         (r: string[]) =>
+    //           `<tr>${r
+    //             .map(
+    //               (c) =>
+    //                 `<td style="border:1px solid #ddd;padding:6px;">${c}</td>`
+    //             )
+    //             .join("")}</tr>`
+    //       )
+    //       .join("")}
+    //   </table>
+    // `;
+    //   },
+    // });
 
     let html = "";
 
@@ -181,10 +181,10 @@ export default function BlogForm({ initialData, onSaved, onCancel }: any) {
       if (content) {
         const parsed =
           typeof content === "string" ? JSON.parse(content) : content;
-        const parsedBlocks = edjsParser.parse(parsed);
-        html = Array.isArray(parsedBlocks)
-          ? parsedBlocks.join("")
-          : String(parsedBlocks || "");
+        // const parsedBlocks = edjsParser.parse(parsed);
+        // html = Array.isArray(parsedBlocks)
+        //   ? parsedBlocks.join("")
+        //   : String(parsedBlocks || "");
       }
     } catch (err) {
       console.warn("⚠️ Failed to convert EditorJS to HTML", err);
@@ -196,7 +196,7 @@ export default function BlogForm({ initialData, onSaved, onCancel }: any) {
       cover_image: coverImage,
       excerpt,
       content_json: content,
-      content_html: html,
+      // content_html: html,
       status,
       is_featured: isFeatured ? 1 : 0,
       tags: tags.map((t) => t.value),

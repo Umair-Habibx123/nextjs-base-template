@@ -18,7 +18,7 @@ import {
   User,
   Key,
 } from "lucide-react";
-import { toast } from "react-toastify";
+import { toast , ToastContainer } from "react-toastify";
 import Loading from "../../components/layout/Loading";
 
 const LoginPage = () => {
@@ -76,6 +76,7 @@ const LoginPage = () => {
   return (
     <main className="min-h-screen flex items-center justify-center bg-linear-to-br from-primary/5 via-secondary/5 to-accent/5 px-4 py-8">
       {/* 🌟 Enhanced Background Effects */}
+      <ToastContainer />
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-primary/10 rounded-full blur-3xl"></div>
         <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-secondary/10 rounded-full blur-3xl"></div>

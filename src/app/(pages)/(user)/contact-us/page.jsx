@@ -12,7 +12,7 @@ import {
   MessageCircle,
   Loader2,
 } from "lucide-react";
-import AuthenticatedRoute from "../../components/ProtectedRoute/AuthenticatedRoute";
+// import AuthenticatedRoute from "../../components/ProtectedRoute/AuthenticatedRoute";
 
 const ContactPage = () => {
   const { t } = useTranslation();
@@ -65,7 +65,7 @@ const ContactPage = () => {
   ];
 
   return (
-    <AuthenticatedRoute>
+    // <AuthenticatedRoute>
       <main className="min-h-screen bg-linear-to-br from-base-100 to-base-200 py-16">
         <div className="container mx-auto px-6">
           {/* Header */}
@@ -196,7 +196,7 @@ const ContactPage = () => {
           </div>
         </div>
       </main>
-    </AuthenticatedRoute>
+    // </AuthenticatedRoute>
   );
 };
 

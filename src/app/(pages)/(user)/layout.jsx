@@ -9,6 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 const UserLayout = ({ children }) => {
   return (
     <div className="min-h-screen flex flex-col bg-linear-to-br from-base-100 to-base-200 overflow-x-hidden">
+      <ToastContainer />
       <Header />
 
       {/* 🔹 Add padding equal to header height */}
@@ -17,8 +18,6 @@ const UserLayout = ({ children }) => {
       </main>
 
       <Footer />
-
-      <ToastContainer />
     </div>
   );
 };

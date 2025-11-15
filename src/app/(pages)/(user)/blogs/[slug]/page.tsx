@@ -348,11 +348,13 @@ export default function BlogDetailPage() {
             prose-code:text-base-content/70 prose-code:bg-base-200 prose-code:px-2 prose-code:py-1 prose-code:rounded-lg
           "
           >
-            {blog.content_json ? (
+            {/* {blog.content_json ? (
               <EditorRenderer data={JSON.parse(blog.content_json)} />
             ) : (
               <div dangerouslySetInnerHTML={{ __html: blog.content_html }} />
-            )}
+            )} */}
+            <EditorRenderer data={JSON.parse(blog.content_json)} />
+
           </div>
         </article>
 
