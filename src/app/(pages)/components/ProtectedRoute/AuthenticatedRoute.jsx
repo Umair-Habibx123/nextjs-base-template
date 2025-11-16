@@ -22,7 +22,7 @@ export default function AuthenticatedRoute({ children }) {
   }, [authLoading, user, pathname, router, setRedirectUrl]);
 
   if (authLoading || !user) {
-    return <Loading fullscreen message="Authenticating..." />;
+    return <Loading fullscreen message="Loading ....." />;
   }
 
   return children;

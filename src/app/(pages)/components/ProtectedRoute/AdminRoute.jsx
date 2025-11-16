@@ -22,7 +22,7 @@ export default function AdminRoute({ children }) {
   }, [authLoading, user, pathname, router, setRedirectUrl]);
 
   if (authLoading || !user) {
-    return <Loading fullscreen message="Checking admin..." />;
+    return <Loading fullscreen message="Loading ....." />;
   }
 
   if (user.role !== "admin") {
