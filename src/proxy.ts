@@ -1,20 +1,36 @@
-export const runtime = "nodejs";
-
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { verifyToken } from "@/utils/protect";
+import { getGlobalSettings } from "@/utils/getGlobalSettings";
 
-export default function proxy(req: NextRequest) {
-  console.log("🔥 PROXY IS RUNNING");
+export async function proxy(req: NextRequest) {
+  const pathname = req.nextUrl.pathname;
 
-  if (process.env.SITE_PASSWORD_ENABLED === "false") {
+  if (
+    pathname.startsWith("/admin-auth") ||
+    pathname.startsWith("/admin-dashboard") ||
+    pathname.startsWith("/api") ||
+    pathname.startsWith("/_next") ||
+    pathname.startsWith("/static") ||
+    pathname === "/favicon.ico"
+  ) {
     return NextResponse.next();
   }
 
-  const token = req.cookies.get("site_access")?.value;
-  const verified = verifyToken(token, req);
+  const settings = await getGlobalSettings();
+  const { site_under_construction, site_password_enabled } = settings;
 
-  const pathname = req.nextUrl.pathname;
+  if (site_under_construction) {
+    if (pathname.startsWith("/construction")) {
+      return NextResponse.next();
+    }
+
+    return NextResponse.redirect(new URL("/construction", req.url));
+  }
+
+  if (!site_password_enabled) {
+    return NextResponse.next();
+  }
 
   if (
     pathname.startsWith("/password") ||
@@ -23,25 +39,17 @@ export default function proxy(req: NextRequest) {
     return NextResponse.next();
   }
 
+  const token = req.cookies.get("site_access")?.value;
+  const verified = verifyToken(token, req);
+
   if (verified === "granted") {
     return NextResponse.next();
   }
 
   const encoded = Buffer.from(pathname).toString("base64");
-
-  const url = new URL(`/password?return=${encoded}`, req.url);
-
-  return NextResponse.redirect(url);
+  return NextResponse.redirect(new URL(`/password?return=${encoded}`, req.url));
 }
 
 export const config = {
-  matcher: ["/((?!_next/|favicon.ico|robots.txt|sitemap.xml|static|public).*)"],
+  matcher: ["/((?!_next/|favicon.ico|robots.txt|sitemap.xml|assets/).*)"],
 };
-
-// ❌ Stolen cookie → INVALID
-// ❌ Cookie copied to other PC → INVALID
-// ❌ Cookie copied to other browser → INVALID
-// ❌ Changing IP (VPN/4G/WiFi) → INVALID
-// ❌ Cookie older than X minutes → INVALID
-// ❌ Modifying 1 character → INVALID
-// ✔ Only valid on original device + network + browser

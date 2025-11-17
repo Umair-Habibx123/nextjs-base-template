@@ -6,11 +6,13 @@ import { admin } from "better-auth/plugins";
 import Database from "better-sqlite3";
 
 export const auth = betterAuth({
-  // SQLite DB
   database: new Database("./database/database.sqlite"),
   secret: process.env.BETTER_AUTH_SECRET,
 
-  // Enable email/password login
+  trustedOrigins: [
+    "http://localhost:3000",
+    "https://communicatory-raeann-crined.ngrok-free.dev",
+  ],
   emailAndPassword: {
     enabled: true,
   },
@@ -18,7 +20,12 @@ export const auth = betterAuth({
     expiresIn: 60 * 60 * 24 * 7, // 7 days
     // expiresIn: 60, // 1 min for testing
   },
-  plugins: [nextCookies(), admin()],
+  plugins: [
+    nextCookies(),
+    admin({
+      adminRoles: ["SUPER_ADMIN", "ADMIN"],
+    }),
+  ],
 });
 
 // Correct way to infer types in Better Auth

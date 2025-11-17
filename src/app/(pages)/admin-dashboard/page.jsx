@@ -6,15 +6,15 @@ import { useTheme } from "../../context/theme/themeContext";
 import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
 import ThemeSettingsPage from "./pages/ThemeSettingsPage";
-import SystemInfoPage from "./pages/SystemInfoPage";
-import AppInfoPage from "./pages/AppInfoPage";
+import SystemInfoPage from "./pages/SystemInformationPage";
+import AppInfoPage from "./pages/AppInformationPage";
 import LanguageManagerPage from "./pages/languageManagerPage";
 import ProfilePage from "./pages/ProfilePage";
 import ContactMessagesPage from "./pages/ContactMessagesPage";
 import NewsletterSubscribe from "./pages/NewsletterPage";
 import AnnouncementManagerPage from "./pages/AnnouncementManagerPage";
 import TemplatePage from "./pages/EmailTemplatePage";
-import { LogOut, X, Sparkles, Shield, Settings } from "lucide-react";
+import { LogOut, Shield, Settings } from "lucide-react";
 import { t } from "i18next";
 import Loading from "../components/layout/Loading";
 import { ADMIN_FEATURES } from "../../config/features";
@@ -24,6 +24,7 @@ import CaseStudiesManagerPage from "./pages/CaseStudiesManagerPage";
 
 import AdminRoute from "../components/ProtectedRoute/AdminRoute";
 import { useAuth } from "../../context/auth/authContext";
+import SettingsPage from "./pages/SettingsPage";
 
 const AdminDashboard = () => {
   const { user, logout } = useAuth();
@@ -77,6 +78,7 @@ const AdminDashboard = () => {
     blogs: "Blog Management",
     projects: "Project Management",
     case_studies: "Case Studies Management",
+    settings: "Settings"
   };
 
   return (
@@ -170,6 +172,9 @@ const AdminDashboard = () => {
               )}
               {ADMIN_FEATURES.case_studies && activePage === "case_studies" && (
                 <CaseStudiesManagerPage />
+              )}
+              {ADMIN_FEATURES.settings && activePage === "settings" && (
+                <SettingsPage />
               )}
             </div>
           </main>

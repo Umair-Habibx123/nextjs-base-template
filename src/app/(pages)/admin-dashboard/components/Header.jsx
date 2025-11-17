@@ -3,7 +3,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "./LanguageSwitcher";
 import ThemeApplyButton from "./ThemeApplyButton";
-import { Menu, User, LogOut, Settings } from "lucide-react";
+import { Menu, User, LogOut, Settings, UserCog } from "lucide-react";
 
 const Header = ({
   user,
@@ -143,7 +143,7 @@ const Header = ({
               {/* Menu Items */}
               <li onClick={onProfileClick}>
                 <a className="flex items-center gap-3 text-base hover:bg-base-200/70 rounded-xl py-3 transition-all duration-200">
-                  <User className="w-5 h-5 text-primary" />
+                  <UserCog className="w-5 h-5 text-primary" />
                   <span className="font-medium">{t("Profile Settings")}</span>
                 </a>
               </li>

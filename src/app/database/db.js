@@ -301,6 +301,18 @@ export default async function getDb() {
     uploaded_at INTEGER
   );
 
+
+  CREATE TABLE IF NOT EXISTS global_settings (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  site_logo TEXT,
+  site_favicon TEXT,
+  site_password_enabled INTEGER DEFAULT 0,
+  site_password TEXT DEFAULT 'demo123',
+  site_under_construction INTEGER DEFAULT 0,
+  createdAt INTEGER,
+  updatedAt INTEGER
+);
+
  `);
 
   // Insert announcement settings default
@@ -313,6 +325,17 @@ export default async function getDb() {
       INSERT INTO announcement_settings (theme, bg_color, text_color, speed)
       VALUES ('scroll-left', '#2563eb', '#ffffff', 25)
     `
+    ).run();
+  }
+
+  const gsCount = db.prepare("SELECT COUNT(*) AS c FROM global_settings").get();
+  if (gsCount.c === 0) {
+    db.prepare(
+      `
+    INSERT INTO global_settings 
+    (site_password_enabled, site_under_construction, createdAt, updatedAt)
+    VALUES (0, 0, strftime('%s','now'), strftime('%s','now'))
+  `
     ).run();
   }
 

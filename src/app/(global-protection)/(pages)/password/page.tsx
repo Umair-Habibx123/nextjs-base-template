@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import { useSessionRedirect } from "../hooks/useSessionRedirect";
+import { useSessionRedirect } from "../../../hooks/useSessionRedirect";
 
 export default function PasswordPage() {
   const [password, setPassword] = useState("");
@@ -41,8 +41,8 @@ export default function PasswordPage() {
     <div
       className="min-h-screen w-full bg-cover bg-center bg-no-repeat flex items-center justify-center relative px-4 sm:px-6"
       style={{
-        backgroundImage:
-          "url('https://tse4.mm.bing.net/th/id/OIP.9ZkYAKGjp5_LiRYi0eJ_VAHaEI?cb=ucfimg2ucfimg=1&rs=1&pid=ImgDetMain&o=7&rm=3')",
+        backgroundImage: "url('/assets/images/passwordBg.webp')",
+          // "url('https://tse4.mm.bing.net/th/id/OIP.9ZkYAKGjp5_LiRYi0eJ_VAHaEI?cb=ucfimg2ucfimg=1&rs=1&pid=ImgDetMain&o=7&rm=3')",
       }}
     >
       {/* Background Overlay */}

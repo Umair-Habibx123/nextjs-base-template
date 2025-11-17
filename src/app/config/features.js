@@ -11,8 +11,7 @@ export const ADMIN_FEATURES = {
   blogs: process.env.NEXT_PUBLIC_ADMIN_FEATURE_BLOGS === "true",
   projects: process.env.NEXT_PUBLIC_ADMIN_FEATURE_PROJECTS === "true",
   case_studies: process.env.NEXT_PUBLIC_ADMIN_FEATURE_CASESTUDIES === "true",
-
+  settings: process.env.NEXT_PUBLIC_ADMIN_FEATURE_SETTINGS === "true",
 };
 
-export const USER_FEATURES = {
-};
+export const USER_FEATURES = {};

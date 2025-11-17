@@ -243,7 +243,7 @@ export default function CaseStudiesDetailPage() {
         </div>
       </nav>
 
-      <div className="container mx-auto px-4 max-w-4xl animate-fade-in">
+      <div className="container mx-auto px-4 max-w-5xl animate-fade-in">
         {/* 🎯 Case Study Header */}
         <header className="py-12 text-center">
           {/* Categories */}

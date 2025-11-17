@@ -96,7 +96,7 @@ export default function BlogsPage() {
   const filteredBlogs = blogs
     .filter((blog) => {
       // Search term filter
-      const matchesSearch = 
+      const matchesSearch =
         blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         blog.excerpt?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         blog.author_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -104,31 +104,37 @@ export default function BlogsPage() {
         blog.categories?.toLowerCase().includes(searchTerm.toLowerCase());
 
       // Featured filter
-      const matchesFeatured = !filters.featured || 
+      const matchesFeatured =
+        !filters.featured ||
         (filters.featured === "featured" && blog.is_featured === 1) ||
         (filters.featured === "not-featured" && blog.is_featured === 0);
 
       // Time range filter
       const blogDate = new Date(blog.createdAt);
       const now = new Date();
-      const matchesTimeRange = 
+      const matchesTimeRange =
         !filters.timeRange ||
-        (filters.timeRange === "week" && (now.getTime() - blogDate.getTime()) < 7 * 24 * 60 * 60 * 1000) ||
-        (filters.timeRange === "month" && (now.getTime() - blogDate.getTime()) < 30 * 24 * 60 * 60 * 1000) ||
-        (filters.timeRange === "year" && (now.getTime() - blogDate.getTime()) < 365 * 24 * 60 * 60 * 1000);
+        (filters.timeRange === "week" &&
+          now.getTime() - blogDate.getTime() < 7 * 24 * 60 * 60 * 1000) ||
+        (filters.timeRange === "month" &&
+          now.getTime() - blogDate.getTime() < 30 * 24 * 60 * 60 * 1000) ||
+        (filters.timeRange === "year" &&
+          now.getTime() - blogDate.getTime() < 365 * 24 * 60 * 60 * 1000);
 
       // View count filter
-      const matchesViewCount = 
+      const matchesViewCount =
         !filters.viewCount ||
         (filters.viewCount === "popular" && blog.view_count > 100) ||
         (filters.viewCount === "trending" && blog.view_count > 50) ||
         (filters.viewCount === "new" && blog.view_count < 10);
 
-      return matchesSearch && matchesFeatured && matchesTimeRange && matchesViewCount;
+      return (
+        matchesSearch && matchesFeatured && matchesTimeRange && matchesViewCount
+      );
     })
     .sort((a, b) => {
       let aValue: any, bValue: any;
-      
+
       switch (filters.sortBy) {
         case "title":
           aValue = a.title.toLowerCase();
@@ -172,9 +178,9 @@ export default function BlogsPage() {
   };
 
   const updateFilter = (key: keyof FilterState, value: any) => {
-    setFilters(prev => ({
+    setFilters((prev) => ({
       ...prev,
-      [key]: value
+      [key]: value,
     }));
   };
 
@@ -188,14 +194,20 @@ export default function BlogsPage() {
   };
 
   const isSearching = searchTerm.length > 0;
-  const hasActiveFilters = Object.values(filters).some(filter => 
-    Array.isArray(filter) ? filter.length > 0 : filter !== '' && filter !== 'createdAt' && filter !== 'desc'
+  const hasActiveFilters = Object.values(filters).some((filter) =>
+    Array.isArray(filter)
+      ? filter.length > 0
+      : filter !== "" && filter !== "createdAt" && filter !== "desc"
   );
 
   // Extract unique values for filters
-  const allTags = blogs.flatMap(blog => blog.tags ? blog.tags.split(',') : []).filter(Boolean);
+  const allTags = blogs
+    .flatMap((blog) => (blog.tags ? blog.tags.split(",") : []))
+    .filter(Boolean);
   const uniqueTags = [...new Set(allTags)].slice(0, 10); // Limit to 10 tags
-  const allCategories = blogs.flatMap(blog => blog.categories ? blog.categories.split(',') : []).filter(Boolean);
+  const allCategories = blogs
+    .flatMap((blog) => (blog.categories ? blog.categories.split(",") : []))
+    .filter(Boolean);
   const uniqueCategories = [...new Set(allCategories)].slice(0, 8); // Limit to 8 categories
 
   if (loading) return <Loading message={t("Fetching blogs...")} />;
@@ -294,7 +306,9 @@ export default function BlogsPage() {
               <Search className="absolute left-6 top-1/2 transform -translate-y-1/2 text-base-content/40 w-6 h-6 transition-all duration-300 group-focus-within:text-primary" />
               <input
                 type="text"
-                placeholder={t("Search blogs by title, content, author, tags...")}
+                placeholder={t(
+                  "Search blogs by title, content, author, tags..."
+                )}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-16 pr-32 py-5 bg-base-100 border-2 border-base-300/30 rounded-2xl focus:outline-none focus:ring-4 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300 text-lg shadow-lg backdrop-blur-lg"
@@ -323,7 +337,9 @@ export default function BlogsPage() {
                   <button
                     onClick={() => setViewMode("grid")}
                     className={`p-2 rounded transition-all duration-200 ${
-                      viewMode === "grid" ? "bg-primary text-primary-content" : "text-base-content/40 hover:text-base-content/60"
+                      viewMode === "grid"
+                        ? "bg-primary text-primary-content"
+                        : "text-base-content/40 hover:text-base-content/60"
                     }`}
                   >
                     <Grid className="w-4 h-4" />
@@ -331,7 +347,9 @@ export default function BlogsPage() {
                   <button
                     onClick={() => setViewMode("list")}
                     className={`p-2 rounded transition-all duration-200 ${
-                      viewMode === "list" ? "bg-primary text-primary-content" : "text-base-content/40 hover:text-base-content/60"
+                      viewMode === "list"
+                        ? "bg-primary text-primary-content"
+                        : "text-base-content/40 hover:text-base-content/60"
                     }`}
                   >
                     <List className="w-4 h-4" />
@@ -344,7 +362,9 @@ export default function BlogsPage() {
             {showFilters && (
               <div className="bg-base-100 border-2 border-base-300/30 rounded-2xl shadow-2xl backdrop-blur-lg p-6 space-y-6">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-semibold text-base-content">Advanced Filters</h3>
+                  <h3 className="text-lg font-semibold text-base-content">
+                    Advanced Filters
+                  </h3>
                   <button
                     onClick={clearFilters}
                     className="btn btn-outline btn-sm rounded-lg"
@@ -363,7 +383,7 @@ export default function BlogsPage() {
                     </label>
                     <select
                       value={filters.sortBy}
-                      onChange={(e) => updateFilter('sortBy', e.target.value)}
+                      onChange={(e) => updateFilter("sortBy", e.target.value)}
                       className="select select-bordered w-full rounded-lg"
                     >
                       <option value="createdAt">Date Created</option>
@@ -379,11 +399,20 @@ export default function BlogsPage() {
                       <span className="label-text font-semibold">Order</span>
                     </label>
                     <button
-                      onClick={() => updateFilter('sortOrder', filters.sortOrder === 'asc' ? 'desc' : 'asc')}
+                      onClick={() =>
+                        updateFilter(
+                          "sortOrder",
+                          filters.sortOrder === "asc" ? "desc" : "asc"
+                        )
+                      }
                       className="btn btn-outline w-full rounded-lg flex items-center gap-2"
                     >
-                      {filters.sortOrder === 'asc' ? <SortAsc className="w-4 h-4" /> : <SortDesc className="w-4 h-4" />}
-                      {filters.sortOrder === 'asc' ? 'Ascending' : 'Descending'}
+                      {filters.sortOrder === "asc" ? (
+                        <SortAsc className="w-4 h-4" />
+                      ) : (
+                        <SortDesc className="w-4 h-4" />
+                      )}
+                      {filters.sortOrder === "asc" ? "Ascending" : "Descending"}
                     </button>
                   </div>
 
@@ -394,7 +423,7 @@ export default function BlogsPage() {
                     </label>
                     <select
                       value={filters.featured}
-                      onChange={(e) => updateFilter('featured', e.target.value)}
+                      onChange={(e) => updateFilter("featured", e.target.value)}
                       className="select select-bordered w-full rounded-lg"
                     >
                       <option value="">All Posts</option>
@@ -406,11 +435,15 @@ export default function BlogsPage() {
                   {/* Time Range */}
                   <div>
                     <label className="label">
-                      <span className="label-text font-semibold">Time Range</span>
+                      <span className="label-text font-semibold">
+                        Time Range
+                      </span>
                     </label>
                     <select
                       value={filters.timeRange}
-                      onChange={(e) => updateFilter('timeRange', e.target.value)}
+                      onChange={(e) =>
+                        updateFilter("timeRange", e.target.value)
+                      }
                       className="select select-bordered w-full rounded-lg"
                     >
                       <option value="">All Time</option>
@@ -424,15 +457,22 @@ export default function BlogsPage() {
                 {/* Quick Filter Buttons */}
                 <div className="space-y-4">
                   <div className="flex flex-wrap gap-2">
-                    <span className="text-sm font-semibold text-base-content/70">Popularity:</span>
-                    {["popular", "trending", "new"].map(type => (
+                    <span className="text-sm font-semibold text-base-content/70">
+                      Popularity:
+                    </span>
+                    {["popular", "trending", "new"].map((type) => (
                       <button
                         key={type}
-                        onClick={() => updateFilter('viewCount', filters.viewCount === type ? '' : type)}
+                        onClick={() =>
+                          updateFilter(
+                            "viewCount",
+                            filters.viewCount === type ? "" : type
+                          )
+                        }
                         className={`badge badge-lg gap-2 capitalize transition-all ${
-                          filters.viewCount === type 
-                            ? 'badge-primary' 
-                            : 'badge-outline hover:badge-primary'
+                          filters.viewCount === type
+                            ? "badge-primary"
+                            : "badge-outline hover:badge-primary"
                         }`}
                       >
                         <Eye className="w-3 h-3" />
@@ -448,18 +488,21 @@ export default function BlogsPage() {
                         <span className="label-text font-semibold">Tags</span>
                       </label>
                       <div className="flex flex-wrap gap-2">
-                        {uniqueTags.map(tag => (
+                        {uniqueTags.map((tag) => (
                           <button
                             key={tag}
-                            onClick={() => updateFilter('tags', 
-                              filters.tags.includes(tag) 
-                                ? filters.tags.filter(t => t !== tag)
-                                : [...filters.tags, tag]
-                            )}
+                            onClick={() =>
+                              updateFilter(
+                                "tags",
+                                filters.tags.includes(tag)
+                                  ? filters.tags.filter((t) => t !== tag)
+                                  : [...filters.tags, tag]
+                              )
+                            }
                             className={`badge badge-lg gap-2 transition-all ${
-                              filters.tags.includes(tag) 
-                                ? 'badge-secondary' 
-                                : 'badge-outline hover:badge-secondary'
+                              filters.tags.includes(tag)
+                                ? "badge-secondary"
+                                : "badge-outline hover:badge-secondary"
                             }`}
                           >
                             <Tag className="w-3 h-3" />
@@ -476,6 +519,7 @@ export default function BlogsPage() {
         </div>
 
         {/* ⭐ Featured Blogs Section - Only show when not searching */}
+
         {!isSearching && featuredBlogs.length > 0 && (
           <div className="mb-16">
             <div className="flex items-center gap-4 mb-8">
@@ -492,16 +536,16 @@ export default function BlogsPage() {
               </div>
             </div>
 
-            <div className="grid lg:grid-cols-3 gap-8">
+            {/* <div className="grid lg:grid-cols-3 gap-8">
               {featuredBlogs.map((blog, index) => (
                 <article
                   key={blog.id}
                   className="group relative bg-linear-to-br from-base-100 to-base-200 border border-base-300/30 rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-500 hover:scale-105 overflow-hidden"
                 >
-                  {/* Gradient Overlay */}
+                 
                   <div className="absolute inset-0 bg-linear-to-t from-base-100/50 to-transparent z-10"></div>
 
-                  {/* Image */}
+                
                   {blog.cover_image && (
                     <figure className="relative h-48 overflow-hidden">
                       <img
@@ -518,7 +562,7 @@ export default function BlogsPage() {
                     </figure>
                   )}
 
-                  {/* Content */}
+                
                   <div className="relative z-20 p-6 space-y-4">
                     <h3 className="text-xl font-bold line-clamp-2 group-hover:text-primary transition-colors duration-300">
                       {blog.title}
@@ -554,9 +598,25 @@ export default function BlogsPage() {
                   </div>
                 </article>
               ))}
-            </div>
-          </div>
-        )}
+            </div> */}
+
+            <div className={`grid gap-6 ${
+      featuredBlogs.length === 1 ? 'grid-cols-1 max-w-4xl mx-auto' :
+      featuredBlogs.length === 2 ? 'grid-cols-1 lg:grid-cols-2' :
+      'grid-cols-1 lg:grid-cols-3'
+    }`}>
+      {featuredBlogs.map((blog, index) => (
+        <FeaturedCollageCard 
+          key={blog.id} 
+          blog={blog} 
+          index={index}
+          total={featuredBlogs.length}
+        />
+      ))}
+    </div>
+  </div>
+)}
+
 
         {/* 📝 Blog Content - Dynamic Views */}
         {filteredBlogs.length === 0 ? (
@@ -616,7 +676,8 @@ export default function BlogsPage() {
                 </div>
               </div>
               <div className="text-base-content/60 text-sm hidden md:block">
-                Sorted by: {filters.sortBy.replace('_', ' ')} ({filters.sortOrder})
+                Sorted by: {filters.sortBy.replace("_", " ")} (
+                {filters.sortOrder})
               </div>
             </div>
 
@@ -624,7 +685,11 @@ export default function BlogsPage() {
             {viewMode === "grid" && (
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {filteredBlogs.map((blog) => (
-                  <BlogGridCard key={blog.id} blog={blog} isSearching={isSearching} />
+                  <BlogGridCard
+                    key={blog.id}
+                    blog={blog}
+                    isSearching={isSearching}
+                  />
                 ))}
               </div>
             )}
@@ -632,7 +697,11 @@ export default function BlogsPage() {
             {viewMode === "list" && (
               <div className="space-y-6">
                 {filteredBlogs.map((blog) => (
-                  <BlogListCard key={blog.id} blog={blog} isSearching={isSearching} />
+                  <BlogListCard
+                    key={blog.id}
+                    blog={blog}
+                    isSearching={isSearching}
+                  />
                 ))}
               </div>
             )}
@@ -648,7 +717,9 @@ export default function BlogsPage() {
                         <th className="py-4 font-semibold">Views</th>
                         <th className="py-4 font-semibold">Status</th>
                         <th className="py-4 font-semibold">Date</th>
-                        <th className="py-4 font-semibold text-center">Action</th>
+                        <th className="py-4 font-semibold text-center">
+                          Action
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
@@ -695,7 +766,13 @@ export default function BlogsPage() {
 }
 
 // Component for Grid View
-const BlogGridCard = ({ blog, isSearching }: { blog: Blog; isSearching: boolean }) => (
+const BlogGridCard = ({
+  blog,
+  isSearching,
+}: {
+  blog: Blog;
+  isSearching: boolean;
+}) => (
   <article className="group relative bg-linear-to-br from-base-100 to-base-200 border border-base-300/30 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-105 overflow-hidden">
     {blog.is_featured && !isSearching && (
       <div className="absolute top-4 left-4 z-20">
@@ -762,7 +839,13 @@ const BlogGridCard = ({ blog, isSearching }: { blog: Blog; isSearching: boolean 
 );
 
 // Component for List View
-const BlogListCard = ({ blog, isSearching }: { blog: Blog; isSearching: boolean }) => (
+const BlogListCard = ({
+  blog,
+  isSearching,
+}: {
+  blog: Blog;
+  isSearching: boolean;
+}) => (
   <article className="group bg-linear-to-br from-base-100 to-base-200 border border-base-300/30 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">
     <div className="flex flex-col md:flex-row">
       {blog.cover_image && (
@@ -855,10 +938,12 @@ const BlogTableRow = ({ blog }: { blog: Blog }) => (
         {blog.is_featured && (
           <Star className="w-4 h-4 text-warning fill-current" />
         )}
-        <span className={`badge badge-sm capitalize ${
-          blog.is_featured ? 'badge-warning' : 'badge-outline'
-        }`}>
-          {blog.is_featured ? 'Featured' : 'Standard'}
+        <span
+          className={`badge badge-sm capitalize ${
+            blog.is_featured ? "badge-warning" : "badge-outline"
+          }`}
+        >
+          {blog.is_featured ? "Featured" : "Standard"}
         </span>
       </div>
     </td>
@@ -877,3 +962,173 @@ const BlogTableRow = ({ blog }: { blog: Blog }) => (
     </td>
   </tr>
 );
+
+// Enhanced Featured Collage Card Component - Add this component:
+
+const FeaturedCollageCard = ({ blog, index, total }: { blog: Blog; index: number; total: number }) => {
+  const getCardVariant = () => {
+    if (total === 1) return 'primary';
+    if (total === 2) return index === 0 ? 'primary' : 'secondary';
+    if (total === 3) {
+      if (index === 0) return 'primary';
+      if (index === 1) return 'secondary';
+      return 'tertiary';
+    }
+    return 'primary';
+  };
+
+  const variant = getCardVariant();
+  
+  const variantStyles = {
+    primary: {
+      container: "lg:col-span-2 lg:row-span-2 group cursor-pointer",
+      image: "h-80 lg:h-96",
+      content: "p-6 lg:p-8",
+      title: "text-2xl lg:text-4xl font-bold",
+      excerpt: "text-base lg:text-lg",
+      badge: "px-4 py-2 text-sm",
+      stats: "text-sm",
+      button: "btn-lg"
+    },
+    secondary: {
+      container: "group cursor-pointer",
+      image: "h-64",
+      content: "p-6",
+      title: "text-xl font-bold",
+      excerpt: "text-sm",
+      badge: "px-3 py-1 text-xs",
+      stats: "text-xs",
+      button: "btn-sm"
+    },
+    tertiary: {
+      container: "group cursor-pointer",
+      image: "h-64",
+      content: "p-6",
+      title: "text-xl font-bold",
+      excerpt: "text-sm",
+      badge: "px-3 py-1 text-xs",
+      stats: "text-xs",
+      button: "btn-sm"
+    }
+  };
+
+  const styles = variantStyles[variant];
+
+  return (
+    <Link href={`/blogs/${blog.slug}`} className={styles.container}>
+      <article className="relative bg-linear-to-br from-base-100 to-base-200 border border-base-300/30 rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-500 hover:scale-105 overflow-hidden h-full">
+        {/* Premium Featured Badge */}
+        <div className="absolute top-4 left-4 z-20">
+          <div className="bg-linear-to-r from-warning to-warning/80 text-warning-content rounded-full shadow-lg flex items-center gap-2 font-semibold backdrop-blur-sm border border-warning/20 transition-all duration-300 group-hover:scale-110">
+            <Star className="w-3 h-3 fill-current" />
+            <span>Featured</span>
+          </div>
+        </div>
+
+        {/* View Count */}
+        <div className="absolute top-4 right-4 z-20">
+          <div className="bg-base-100/90 backdrop-blur-sm text-base-content px-3 py-1 rounded-full shadow-lg flex items-center gap-2 text-sm border border-base-300/30">
+            <Eye className="w-3 h-3" />
+            <span>{blog.view_count || 0}</span>
+          </div>
+        </div>
+
+        {/* Image with Overlay */}
+        {blog.cover_image && (
+          <figure className={`relative overflow-hidden ${styles.image}`}>
+            <img
+              src={blog.cover_image}
+              alt={blog.title}
+              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+              loading={index === 0 ? "eager" : "lazy"}
+            />
+            {/* Gradient Overlay */}
+            <div className="absolute inset-0 bg-linear-to-t from-base-100/60 via-base-100/20 to-transparent" />
+            {/* Shine Effect */}
+            <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+          </figure>
+        )}
+
+        {/* Content */}
+        <div className={`relative z-20 space-y-4 ${styles.content}`}>
+          {/* Title */}
+          <h3 className={`text-base-content group-hover:text-primary transition-colors duration-300 leading-tight line-clamp-3 ${styles.title}`}>
+            {blog.title}
+          </h3>
+
+          {/* Excerpt */}
+          {blog.excerpt && (
+            <p className={`text-base-content/70 leading-relaxed line-clamp-3 ${styles.excerpt}`}>
+              {blog.excerpt}
+            </p>
+          )}
+
+          {/* Metadata */}
+          <div className="flex items-center justify-between pt-4 border-t border-base-300/30">
+            <div className="flex items-center gap-4 text-base-content/60">
+              {/* Author */}
+              <div className="flex items-center gap-2">
+                <div className="avatar">
+                  <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
+                    <User className="w-3 h-3 text-primary" />
+                  </div>
+                </div>
+                <span className="font-medium text-sm">{blog.author_name}</span>
+              </div>
+
+              {/* Date */}
+              <div className="flex items-center gap-1">
+                <Calendar className="w-4 h-4" />
+                <span className="text-sm">
+                  {new Date(blog.createdAt).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric'
+                  })}
+                </span>
+              </div>
+            </div>
+
+            {/* Read Time */}
+            {blog.read_time && (
+              <div className="flex items-center gap-1 text-base-content/50">
+                <Clock className="w-4 h-4" />
+                <span className="text-sm">{blog.read_time} min read</span>
+              </div>
+            )}
+          </div>
+
+          {/* Tags */}
+          {blog.tags && (
+            <div className="flex flex-wrap gap-2 pt-2">
+              {blog.tags.split(',').slice(0, 2).map((tag, tagIndex) => (
+                <span
+                  key={tagIndex}
+                  className="badge badge-outline badge-sm text-base-content/60 hover:badge-primary hover:text-primary-content transition-all duration-200"
+                >
+                  {tag.trim()}
+                </span>
+              ))}
+              {blog.tags.split(',').length > 2 && (
+                <span className="badge badge-ghost badge-sm text-base-content/40">
+                  +{blog.tags.split(',').length - 2}
+                </span>
+              )}
+            </div>
+          )}
+
+          {/* CTA Button */}
+          <div className="pt-4">
+            <div className={`btn btn-warning rounded-xl w-full group/btn transition-all duration-300 transform hover:scale-105 hover:shadow-lg flex items-center justify-center gap-2 ${styles.button}`}>
+              <span>Read Story</span>
+              <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform duration-300" />
+            </div>
+          </div>
+        </div>
+
+        {/* Hover Effect Border */}
+        <div className="absolute inset-0 rounded-3xl border-2 border-transparent group-hover:border-warning/30 transition-all duration-300 pointer-events-none" />
+      </article>
+    </Link>
+  );
+};
