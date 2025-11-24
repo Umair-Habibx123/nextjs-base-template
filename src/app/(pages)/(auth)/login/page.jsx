@@ -1,4 +1,4 @@
-// src/app/(pages)/auth/login/page.jsx
+// src/app/(pages)/login/page.jsx
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -18,7 +18,7 @@ import {
   User,
   Key,
 } from "lucide-react";
-import { toast , ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import Loading from "../../components/layout/Loading";
 
 const LoginPage = () => {
@@ -32,22 +32,26 @@ const LoginPage = () => {
   const { getRedirectUrl, clearRedirectUrl } = useSessionRedirect();
 
   // Auto redirect if already logged in
-  useEffect(() => {
-    if (!authLoading && user) {
-      handlePostLoginRedirect();
-    }
-  }, [user, authLoading]);
+  // useEffect(() => {
+  //   if (!authLoading && user) {
+  //     handlePostLoginRedirect();
+  //   }
+  // }, [user, authLoading]);
 
   const handlePostLoginRedirect = () => {
     const redirectUrl = getRedirectUrl();
-    
+
     if (redirectUrl) {
       // Clear the stored URL before redirecting
       clearRedirectUrl();
       router.replace(redirectUrl);
     } else {
       // Default redirect based on user role
-      router.replace(user.role === "admin" ? "/admin-dashboard" : "/");
+      router.replace(
+        user.role === "admin" || user.role === "superadmin"
+          ? "/admin-dashboard"
+          : "/"
+      );
     }
   };
 
@@ -65,13 +69,13 @@ const LoginPage = () => {
     }
   };
 
-  if (authLoading) {
-    return <Loading fullscreen message="Loading ....." />;
-  }
+  // if (authLoading) {
+  //   return <Loading fullscreen message="Loading ....." />;
+  // }
 
-  if (user) {
-    return <Loading fullscreen message="Redirecting..." />;
-  }
+  // if (user) {
+  //   return <Loading fullscreen message="Redirecting..." />;
+  // }
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-linear-to-br from-primary/5 via-secondary/5 to-accent/5 px-4 py-8">
@@ -102,9 +106,8 @@ const LoginPage = () => {
               </p>
             </div>
           </div>
-
           {/* 📝 Enhanced Login Form */}
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-5">
             {/* Email Field */}
             <div className="form-control">
               <label className="label">
@@ -182,9 +185,31 @@ const LoginPage = () => {
               )}
             </button>
           </form>
+          <div className="text-center mb-4">
+            <p className="text-base-content/70">
+              {t("Don't have an account?")}{" "}
+              <button
+                type="button"
+                onClick={() => router.push("/signup")}
+                className="text-primary font-semibold hover:underline cursor-pointer"
+              >
+                {t("Sign up")}
+              </button>
+            </p>
+          </div>
+
+          <div className="text-center mb-4">
+            <button
+              type="button"
+              onClick={() => router.push("/request-password-reset")}
+              className="text-primary font-semibold hover:underline cursor-pointer text-sm"
+            >
+              {t("Forgot your password?")}
+            </button>
+          </div>
 
           {/* 🔒 Security Features */}
-          <div className="space-y-4 pt-4 border-t border-base-300/30">
+          <div className="space-y-4 border-t border-base-300/30">
             {/* Security Tips */}
             <div className="bg-warning/5 rounded-2xl p-4 border border-warning/20">
               <div className="flex items-start gap-3">

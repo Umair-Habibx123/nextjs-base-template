@@ -1,16 +1,56 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useSessionRedirect } from "../../../hooks/useSessionRedirect";
 
 export default function PasswordPage() {
+  // -----------------------
+  // HOOKS MUST ALWAYS RUN
+  // -----------------------
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const [allowed, setAllowed] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+
   const search = useSearchParams();
+  const router = useRouter();
   const { setRedirectUrl, getRedirectUrl, clearRedirectUrl } =
     useSessionRedirect();
 
+  // 1) Check password protection status
+  useEffect(() => {
+    async function check() {
+      const res = await fetch("/api/admin/settings/global", {
+        cache: "no-store",
+      });
+
+      const json = await res.json();
+      const settings = json.data;
+
+      if (!settings.site_password_enabled) {
+        router.replace("/");
+        return;
+      }
+
+      setAllowed(true);
+      setLoaded(true);
+    }
+
+    check();
+  }, []);
+
+  // 2) Save redirect URL (this must always run, even if hidden)
+  useEffect(() => {
+    const encoded = search.get("return");
+    if (encoded) {
+      const decoded = Buffer.from(encoded, "base64").toString("utf8");
+      setRedirectUrl(decoded);
+    }
+  }, []);
+
+  // 3) Submit handler
   const submit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -23,7 +63,7 @@ export default function PasswordPage() {
     if (res.ok) {
       const url = getRedirectUrl();
       clearRedirectUrl();
-      window.location.href = url || "/";
+      window.location.replace(url || "/");
     } else {
       setError("Incorrect password");
     }
@@ -31,18 +71,16 @@ export default function PasswordPage() {
     setIsLoading(false);
   };
 
-  useEffect(() => {
-    const encoded = search.get("return");
-    const decoded = Buffer.from(encoded, "base64").toString("utf8");
-    if (decoded) setRedirectUrl(decoded);
-  }, []);
+  // -----------------------
+  // PREVENT FLICKER
+  // -----------------------
+  if (!loaded || !allowed) return null;
 
   return (
     <div
       className="min-h-screen w-full bg-cover bg-center bg-no-repeat flex items-center justify-center relative px-4 sm:px-6"
       style={{
         backgroundImage: "url('/assets/images/passwordBg.webp')",
-          // "url('https://tse4.mm.bing.net/th/id/OIP.9ZkYAKGjp5_LiRYi0eJ_VAHaEI?cb=ucfimg2ucfimg=1&rs=1&pid=ImgDetMain&o=7&rm=3')",
       }}
     >
       {/* Background Overlay */}
@@ -62,15 +100,13 @@ export default function PasswordPage() {
           hover:bg-white/20 hover:border-white/25
         "
       >
-        {/* Glow Behind Card */}
         <div className="absolute -inset-3 rounded-3xl bg-blue-500/10 blur-2xl -z-10"></div>
 
-        {/* Heading */}
         <h1
           className="
             text-4xl sm:text-5xl md:text-6xl 
-            font-bold 
-            bg-linear-to-r from-white to-gray-300 bg-clip-text text-transparent 
+            font-bold bg-linear-to-r 
+            from-white to-gray-300 bg-clip-text text-transparent 
             mb-4 sm:mb-6 
             tracking-tight 
           "
@@ -78,21 +114,12 @@ export default function PasswordPage() {
           Enter Password
         </h1>
 
-        {/* Subtitle */}
-        <p
-          className="
-            text-white/90 
-            text-base sm:text-lg 
-            mb-6 sm:mb-10 
-            font-light tracking-wide
-          "
-        >
+        <p className="text-white/90 text-base sm:text-lg mb-6 sm:mb-10 font-light tracking-wide">
           Unlock exclusive content with your secure password
         </p>
 
         {/* Form */}
         <form onSubmit={submit} className="flex flex-col gap-3 sm:gap-4 w-full">
-          {/* Input + Button */}
           <div className="flex flex-col sm:flex-row gap-3 justify-center w-full">
             <input
               type="password"
@@ -101,14 +128,11 @@ export default function PasswordPage() {
               placeholder="Enter your password"
               className="
                 input input-bordered 
-                w-full 
-                bg-white/80 
-                border-white/30 
+                w-full bg-white/80 border-white/30 
                 focus:border-cyan-400 focus:ring-2 
                 focus:ring-cyan-400/40 
                 transition-all duration-300 
-                rounded-xl 
-                py-3 px-4 text-gray-800
+                rounded-xl py-3 px-4 text-gray-800
               "
             />
 
@@ -116,10 +140,7 @@ export default function PasswordPage() {
               className={`
                 btn 
                 bg-linear-to-r from-blue-500 to-purple-500 
-                border-0 
-                rounded-xl 
-                px-8 
-                font-semibold 
+                border-0 rounded-xl px-8 font-semibold 
                 transition-all duration-300 
                 hover:scale-105 active:scale-95 
                 text-white 
@@ -131,7 +152,6 @@ export default function PasswordPage() {
             </button>
           </div>
 
-          {/* Error Message */}
           {error && (
             <div className="flex items-center justify-center gap-2 text-red-400 text-sm mt-1 animate-pulse">
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -146,7 +166,6 @@ export default function PasswordPage() {
           )}
         </form>
 
-        {/* Contact Button */}
         <button
           className="
             btn btn-outline btn-info 
@@ -160,7 +179,6 @@ export default function PasswordPage() {
           Contact Us
         </button>
 
-        {/* Security Badge */}
         <div className="mt-6 flex items-center justify-center gap-2 text-white/60 text-xs">
           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
             <path

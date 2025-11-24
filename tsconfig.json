@@ -37,7 +37,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/dev/types/**/*.ts"
-  ],
+, "src/app/(pages)/(auth)/signup/page.jsx"  ],
   "exclude": [
     "node_modules"
   ]

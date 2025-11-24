@@ -10,8 +10,8 @@ export async function getGlobalSettings() {
   const now = Date.now();
 
   if (cache.settings && now - cache.timestamp < cache.ttl) {
-    console.log('✅ Using cached settings:', cache.settings);
-    console.log('⏰ Cache age:', (now - cache.timestamp) + 'ms');
+    // console.log('✅ Using cached settings:', cache.settings);
+    // console.log('⏰ Cache age:', (now - cache.timestamp) + 'ms');
     return cache.settings;
   }
 
@@ -25,7 +25,7 @@ export async function getGlobalSettings() {
     site_password: row.site_password ?? "",
   };
 
-  console.log('🔄 Refreshing cache with:', parsed);
+  // console.log('🔄 Refreshing cache with:', parsed);
   
   cache.settings = parsed;
   cache.timestamp = now;

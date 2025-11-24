@@ -17,7 +17,7 @@ export default function AuthenticatedRoute({ children }) {
     if (!authLoading && !user) {
       // Store current path for redirect after login
       setRedirectUrl(pathname);
-      router.replace("/auth/login");
+      router.replace("/login");
     }
   }, [authLoading, user, pathname, router, setRedirectUrl]);
 

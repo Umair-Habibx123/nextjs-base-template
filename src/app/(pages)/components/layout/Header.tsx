@@ -206,7 +206,7 @@ const Header = () => {
 
           {!user ? (
             <Link
-              href="/auth/login"
+              href="/login"
               className="btn btn-primary rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center gap-2"
             >
               <User className="w-4 h-4" />
@@ -258,7 +258,9 @@ const Header = () => {
                         {user.email?.split("@")[0]}
                       </p>
                       <p className="text-sm text-base-content/60 truncate">
-                        {user.role === "admin" ? "Administrator" : "User"}
+                        {user.role === "admin" || user.role === "superadmin"
+                          ? "Administrator"
+                          : "User"}
                       </p>
                     </div>
                   </div>
@@ -273,7 +275,7 @@ const Header = () => {
                   </div>
                 </li>
 
-                {user.role === "admin" && (
+                {(user.role === "admin" || user.role === "superadmin") && (
                   <li>
                     <Link
                       href="/admin-dashboard"

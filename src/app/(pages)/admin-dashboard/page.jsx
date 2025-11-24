@@ -25,6 +25,7 @@ import CaseStudiesManagerPage from "./pages/CaseStudiesManagerPage";
 import AdminRoute from "../components/ProtectedRoute/AdminRoute";
 import { useAuth } from "../../context/auth/authContext";
 import SettingsPage from "./pages/SettingsPage";
+import UserManagerPage from "./pages/UserManagement";
 
 const AdminDashboard = () => {
   const { user, logout } = useAuth();
@@ -68,6 +69,7 @@ const AdminDashboard = () => {
   const pageTitles = {
     appinfo: "App Dashboard",
     theme: "Theme Settings",
+    usermanage: "User Management",
     systeminfo: "System Information",
     langmanage: "Language Manager",
     profile: "Profile Settings",
@@ -175,6 +177,9 @@ const AdminDashboard = () => {
               )}
               {ADMIN_FEATURES.settings && activePage === "settings" && (
                 <SettingsPage />
+              )}
+               {ADMIN_FEATURES.settings && activePage === "usermanage" && (
+                <UserManagerPage />
               )}
             </div>
           </main>

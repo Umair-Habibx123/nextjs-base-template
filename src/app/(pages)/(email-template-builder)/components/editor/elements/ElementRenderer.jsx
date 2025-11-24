@@ -115,6 +115,7 @@ const ElementRenderer = ({
         backgroundColor,
         buttonColor,
         buttonShape,
+        buttonUrl, // Make sure this is included
         alignment,
         dividerStyle,
         fontStyles,

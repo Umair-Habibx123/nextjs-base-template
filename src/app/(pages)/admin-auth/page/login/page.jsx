@@ -1,4 +1,4 @@
-// src/app/(pages)/auth/login/page.jsx
+// src/app/(pages)/login/page.jsx
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -47,7 +47,7 @@ const LoginPage = () => {
       router.replace(redirectUrl);
     } else {
       // Default redirect based on user role
-      router.replace(user.role === "admin" ? "/admin-dashboard" : "/");
+      router.replace(user.role === "admin" || user.role === "superadmin" ? "/admin-dashboard" : "/");
     }
   };
 

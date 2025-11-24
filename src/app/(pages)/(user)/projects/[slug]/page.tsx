@@ -280,9 +280,17 @@ export default function ProjectDetailPage() {
                 {project.author_name?.[0] || "U"}
               </div>
               <div className="text-left">
-                <div className="font-semibold text-base-content">
-                  {project.author_name || "Unknown Author"}
-                </div>
+                {project.author_image ? (
+                  <img
+                    src={project.author_image}
+                    className="w-12 h-12 rounded-full object-cover"
+                    alt={project.author_name}
+                  />
+                ) : (
+                  <div className="w-12 h-12 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center text-primary-content font-semibold text-lg">
+                    {project.author_name?.charAt(0)}
+                  </div>
+                )}
                 <div className="flex items-center gap-4 text-sm text-base-content/60 mt-1">
                   <span>
                     {new Date(project.createdAt).toLocaleDateString("en-US", {
@@ -470,13 +478,18 @@ export default function ProjectDetailPage() {
               <span className="text-sm font-medium">42</span>
             </button>
 
-            <button onClick={() => handleShare()} className="text-base-content/70">
+            <button
+              onClick={() => handleShare()}
+              className="text-base-content/70"
+            >
               <Share2 className="w-5 h-5" />
             </button>
 
             <button
               onClick={() => setIsBookmarked(!isBookmarked)}
-              className={isBookmarked ? "text-green-600" : "text-base-content/70"}
+              className={
+                isBookmarked ? "text-green-600" : "text-base-content/70"
+              }
             >
               {isBookmarked ? (
                 <BookmarkCheck className="w-5 h-5 fill-current" />

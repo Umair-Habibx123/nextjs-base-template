@@ -31,6 +31,7 @@ export async function GET(req: Request) {
           b.view_count,
           b.order_number,
           u.name AS author_name,
+          u.image AS author_image,
           GROUP_CONCAT(DISTINCT t.name) AS tags,
           GROUP_CONCAT(DISTINCT c.name) AS categories,
           -- Calculate read time based on content length (approx 200 words per minute)

@@ -47,6 +47,7 @@ export async function POST(req: Request) {
       tags = [],
       categories = [],
       order_number = null, // can be number or null
+      author_id,
     } = body;
 
     if (!title) {
@@ -78,19 +79,6 @@ export async function POST(req: Request) {
     }
 
     const now = Date.now();
-
-    // ✅ Author (assuming at least one admin exists as per your seeding)
-    const author = db
-      .prepare("SELECT id FROM user WHERE role = 'admin' LIMIT 1")
-      .get();
-    const authorId = author?.id;
-
-    if (!authorId) {
-      return NextResponse.json(
-        { error: "No admin author found. Seed an admin user first." },
-        { status: 500 }
-      );
-    }
 
     const contentToSave =
       typeof content_json === "string" ? content_json : JSON.stringify(content_json);
@@ -129,7 +117,7 @@ export async function POST(req: Request) {
       contentToSave,
       status,
       is_featured ? 1 : 0,
-      authorId,
+      author_id,
       now,
       now,
       publishedAt,
@@ -154,7 +142,7 @@ export async function POST(req: Request) {
         .run(projectId, catId);
     }
 
-    return NextResponse.json({ id: projectId, author_id: authorId });
+    return NextResponse.json({ id: projectId, author_id: author_id });
   } catch (err) {
     console.error("POST /projects error", err);
     return NextResponse.json(

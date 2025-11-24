@@ -25,7 +25,10 @@ export async function proxy(req: NextRequest) {
       return NextResponse.next();
     }
 
-    return NextResponse.redirect(new URL("/construction", req.url));
+    return NextResponse.redirect(new URL("/construction", req.url), {
+  status: 307
+});
+
   }
 
   if (!site_password_enabled) {

@@ -17,7 +17,7 @@ export default function AdminRoute({ children }) {
     if (!authLoading && !user) {
       // Store current path for redirect after login
       setRedirectUrl(pathname);
-      router.replace("/auth/login");
+      router.replace("/login");
     }
   }, [authLoading, user, pathname, router, setRedirectUrl]);
 
@@ -25,9 +25,11 @@ export default function AdminRoute({ children }) {
     return <Loading fullscreen message="Loading ....." />;
   }
 
-  if (user.role !== "admin") {
-    return notFound();
-  }
+
+ if (user.role !== "admin" && user.role !== "superadmin") {
+  return notFound();
+}
+
 
   return children;
 }

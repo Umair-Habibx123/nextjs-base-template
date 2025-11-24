@@ -11,6 +11,7 @@ export async function GET() {
       SELECT 
         b.*, 
         u.name AS author_name,
+        u.image AS author_image,
         u.email AS author_email,
         GROUP_CONCAT(DISTINCT t.name) AS tags,
         GROUP_CONCAT(DISTINCT c.name) AS categories
@@ -47,6 +48,7 @@ export async function POST(req: Request) {
       tags = [],
       categories = [],
       order_number = null, // can be number or null
+      author_id,
     } = body;
 
     if (!title) {
@@ -55,8 +57,6 @@ export async function POST(req: Request) {
 
     const db = await getDb();
 
-    // (Optional once per app startup) ensure unique index for non-null order numbers
-    // Multiple NULLs are allowed; duplicate numbers are not.
     db.exec(`
       CREATE UNIQUE INDEX IF NOT EXISTS idx_blogs_order_unique
       ON blogs(order_number)
@@ -78,19 +78,6 @@ export async function POST(req: Request) {
     }
 
     const now = Date.now();
-
-    // ✅ Author (assuming at least one admin exists as per your seeding)
-    const author = db
-      .prepare("SELECT id FROM user WHERE role = 'admin' LIMIT 1")
-      .get();
-    const authorId = author?.id;
-
-    if (!authorId) {
-      return NextResponse.json(
-        { error: "No admin author found. Seed an admin user first." },
-        { status: 500 }
-      );
-    }
 
     const contentToSave =
       typeof content_json === "string" ? content_json : JSON.stringify(content_json);
@@ -129,7 +116,7 @@ export async function POST(req: Request) {
       contentToSave,
       status,
       is_featured ? 1 : 0,
-      authorId,
+      author_id,
       now,
       now,
       publishedAt,
@@ -154,7 +141,7 @@ export async function POST(req: Request) {
         .run(blogId, catId);
     }
 
-    return NextResponse.json({ id: blogId, author_id: authorId });
+    return NextResponse.json({ id: blogId, author_id: author_id });
   } catch (err) {
     console.error("POST /blogs error", err);
     return NextResponse.json(

@@ -32,9 +32,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (credentials) => {
     setLoginLoading(true);
     try {
-      const { data, error } = await authClient.signIn.email(
-        credentials
-      );
+      const { data, error } = await authClient.signIn.email(credentials);
 
       if (error) {
         let msg = error.message || "Login failed";
@@ -62,7 +60,7 @@ export const AuthProvider = ({ children }) => {
     try {
       await authClient.signOut();
       setUser(null);
-      router.replace("/auth/login");
+      router.replace("/login");
     } finally {
       setLoading(false);
     }

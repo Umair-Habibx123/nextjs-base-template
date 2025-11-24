@@ -116,7 +116,7 @@ const HomePage = () => {
               </Link>
             ) : (
               <Link 
-                href="/auth/login" 
+                href="/login" 
                 className="btn btn-primary btn-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 font-semibold w-full max-w-xs mx-auto flex items-center justify-center gap-3"
               >
                 <Rocket className="w-5 h-5" />

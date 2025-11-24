@@ -276,9 +276,18 @@ export default function BlogDetailPage() {
           <div className="flex flex-col items-center gap-6">
             {/* Author Info */}
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center text-primary-content font-semibold text-lg">
-                {blog.author_name?.[0] || "U"}
-              </div>
+              {blog.author_image ? (
+                <img
+                  src={blog.author_image}
+                  className="w-12 h-12 rounded-full object-cover"
+                  alt={blog.author_name}
+                />
+              ) : (
+                <div className="w-12 h-12 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center text-primary-content font-semibold text-lg">
+                  {blog.author_name?.charAt(0)}
+                </div>
+              )}
+
               <div className="text-left">
                 <div className="font-semibold text-base-content">
                   {blog.author_name || "Unknown Author"}
@@ -354,7 +363,6 @@ export default function BlogDetailPage() {
               <div dangerouslySetInnerHTML={{ __html: blog.content_html }} />
             )} */}
             <EditorRenderer data={JSON.parse(blog.content_json)} />
-
           </div>
         </article>
 
@@ -472,13 +480,18 @@ export default function BlogDetailPage() {
               <span className="text-sm font-medium">42</span>
             </button>
 
-            <button onClick={() => handleShare()} className="text-base-content/70">
+            <button
+              onClick={() => handleShare()}
+              className="text-base-content/70"
+            >
               <Share2 className="w-5 h-5" />
             </button>
 
             <button
               onClick={() => setIsBookmarked(!isBookmarked)}
-              className={isBookmarked ? "text-green-600" : "text-base-content/70"}
+              className={
+                isBookmarked ? "text-green-600" : "text-base-content/70"
+              }
             >
               {isBookmarked ? (
                 <BookmarkCheck className="w-5 h-5 fill-current" />

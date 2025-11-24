@@ -518,25 +518,7 @@ export default function BlogsPage() {
           </div>
         </div>
 
-        {/* ⭐ Featured Blogs Section - Only show when not searching */}
-
-        {!isSearching && featuredBlogs.length > 0 && (
-          <div className="mb-16">
-            <div className="flex items-center gap-4 mb-8">
-              <div className="p-3 rounded-2xl bg-linear-to-br from-warning to-warning/80 text-warning-content shadow-lg">
-                <Star className="w-6 h-6 fill-current" />
-              </div>
-              <div>
-                <h2 className="text-3xl font-bold text-base-content">
-                  Featured Stories
-                </h2>
-                <p className="text-base-content/60">
-                  Handpicked content worth exploring
-                </p>
-              </div>
-            </div>
-
-            {/* <div className="grid lg:grid-cols-3 gap-8">
+        {/* <div className="grid lg:grid-cols-3 gap-8">
               {featuredBlogs.map((blog, index) => (
                 <article
                   key={blog.id}
@@ -600,23 +582,79 @@ export default function BlogsPage() {
               ))}
             </div> */}
 
-            <div className={`grid gap-6 ${
-      featuredBlogs.length === 1 ? 'grid-cols-1 max-w-4xl mx-auto' :
-      featuredBlogs.length === 2 ? 'grid-cols-1 lg:grid-cols-2' :
-      'grid-cols-1 lg:grid-cols-3'
-    }`}>
-      {featuredBlogs.map((blog, index) => (
-        <FeaturedCollageCard 
-          key={blog.id} 
-          blog={blog} 
-          index={index}
-          total={featuredBlogs.length}
-        />
-      ))}
-    </div>
-  </div>
-)}
+        {/* {!isSearching && featuredBlogs.length > 0 && (
+          <div className="mb-16">
+            <div className="flex items-center gap-4 mb-8">
+              <div className="p-3 rounded-2xl bg-linear-to-br from-warning to-warning/80 text-warning-content shadow-lg">
+                <Star className="w-6 h-6 fill-current" />
+              </div>
+              <div>
+                <h2 className="text-3xl font-bold text-base-content">
+                  Featured Stories
+                </h2>
+                <p className="text-base-content/60">
+                  Handpicked content worth exploring
+                </p>
+              </div>
+            </div>
 
+            <div
+              className={`grid gap-6 ${
+                featuredBlogs.length === 1
+                  ? "grid-cols-1 max-w-4xl mx-auto"
+                  : featuredBlogs.length === 2
+                  ? "grid-cols-1 lg:grid-cols-2"
+                  : "grid-cols-1 lg:grid-cols-3"
+              }`}
+            >
+              {featuredBlogs.map((blog, index) => (
+                <FeaturedCollageCard
+                  key={blog.id}
+                  blog={blog}
+                  index={index}
+                  total={featuredBlogs.length}
+                />
+              ))}
+            </div>
+          </div>
+        )} */}
+
+        {!isSearching && featuredBlogs.length > 0 && (
+          <div className="mb-16">
+            <div className="flex items-center gap-4 mb-8">
+              <div className="p-3 rounded-2xl bg-linear-to-br from-warning to-warning/80 text-warning-content shadow-lg">
+                <Star className="w-6 h-6 fill-current" />
+              </div>
+              <div>
+                <h2 className="text-3xl font-bold text-base-content">
+                  Featured Stories
+                </h2>
+                <p className="text-base-content/60">
+                  Handpicked content worth exploring
+                </p>
+              </div>
+            </div>
+
+            <div
+              className={`grid gap-6 ${
+                featuredBlogs.length === 1
+                  ? "grid-cols-1"
+                  : featuredBlogs.length === 2
+                  ? "grid-cols-1 lg:grid-cols-2"
+                  : "grid-cols-1 lg:grid-cols-3"
+              }`}
+            >
+              {featuredBlogs.map((blog, index) => (
+                <MasonryFeaturedCard
+                  key={blog.id}
+                  blog={blog}
+                  index={index}
+                  total={featuredBlogs.length}
+                />
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* 📝 Blog Content - Dynamic Views */}
         {filteredBlogs.length === 0 ? (
@@ -963,171 +1001,273 @@ const BlogTableRow = ({ blog }: { blog: Blog }) => (
   </tr>
 );
 
-// Enhanced Featured Collage Card Component - Add this component:
+// const FeaturedCollageCard = ({
+//   blog,
+//   index,
+//   total,
+// }: {
+//   blog: Blog;
+//   index: number;
+//   total: number;
+// }) => {
+//   const getCardVariant = () => {
+//     if (total === 1) return "primary";
+//     if (total === 2) return index === 0 ? "primary" : "secondary";
+//     if (total === 3) {
+//       if (index === 0) return "primary";
+//       if (index === 1) return "secondary";
+//       return "tertiary";
+//     }
+//     return "primary";
+//   };
 
-const FeaturedCollageCard = ({ blog, index, total }: { blog: Blog; index: number; total: number }) => {
-  const getCardVariant = () => {
-    if (total === 1) return 'primary';
-    if (total === 2) return index === 0 ? 'primary' : 'secondary';
+//   const variant = getCardVariant();
+
+//   const variantStyles = {
+//     primary: {
+//       container: "lg:col-span-2 lg:row-span-2 group cursor-pointer",
+//       image: "h-80 lg:h-96",
+//       content: "p-6 lg:p-8",
+//       title: "text-2xl lg:text-4xl font-bold",
+//       excerpt: "text-base lg:text-lg",
+//       badge: "px-4 py-2 text-sm",
+//       stats: "text-sm",
+//       button: "btn-lg",
+//     },
+//     secondary: {
+//       container: "group cursor-pointer",
+//       image: "h-64",
+//       content: "p-6",
+//       title: "text-xl font-bold",
+//       excerpt: "text-sm",
+//       badge: "px-3 py-1 text-xs",
+//       stats: "text-xs",
+//       button: "btn-sm",
+//     },
+//     tertiary: {
+//       container: "group cursor-pointer",
+//       image: "h-64",
+//       content: "p-6",
+//       title: "text-xl font-bold",
+//       excerpt: "text-sm",
+//       badge: "px-3 py-1 text-xs",
+//       stats: "text-xs",
+//       button: "btn-sm",
+//     },
+//   };
+
+//   const styles = variantStyles[variant];
+
+//   return (
+//     <Link href={`/blogs/${blog.slug}`} className={styles.container}>
+//       <article className="relative bg-linear-to-br from-base-100 to-base-200 border border-base-300/30 rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-500 hover:scale-105 overflow-hidden h-full">
+//         {/* Premium Featured Badge */}
+//         <div className="absolute top-4 left-4 z-20">
+//           <div className="bg-linear-to-r from-warning to-warning/80 text-warning-content rounded-full shadow-lg flex items-center gap-2 font-semibold backdrop-blur-sm border border-warning/20 transition-all duration-300 group-hover:scale-110">
+//             <Star className="w-3 h-3 fill-current" />
+//             <span>Featured</span>
+//           </div>
+//         </div>
+
+//         {/* View Count */}
+//         <div className="absolute top-4 right-4 z-20">
+//           <div className="bg-base-100/90 backdrop-blur-sm text-base-content px-3 py-1 rounded-full shadow-lg flex items-center gap-2 text-sm border border-base-300/30">
+//             <Eye className="w-3 h-3" />
+//             <span>{blog.view_count || 0}</span>
+//           </div>
+//         </div>
+
+//         {/* Image with Overlay */}
+//         {blog.cover_image && (
+//           <figure className={`relative overflow-hidden ${styles.image}`}>
+//             <img
+//               src={blog.cover_image}
+//               alt={blog.title}
+//               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+//               loading={index === 0 ? "eager" : "lazy"}
+//             />
+//             {/* Gradient Overlay */}
+//             <div className="absolute inset-0 bg-linear-to-t from-base-100/60 via-base-100/20 to-transparent" />
+//             {/* Shine Effect */}
+//             <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+//           </figure>
+//         )}
+
+//         {/* Content */}
+//         <div className={`relative z-20 space-y-4 ${styles.content}`}>
+//           {/* Title */}
+//           <h3
+//             className={`text-base-content group-hover:text-primary transition-colors duration-300 leading-tight line-clamp-3 ${styles.title}`}
+//           >
+//             {blog.title}
+//           </h3>
+
+//           {/* Excerpt */}
+//           {blog.excerpt && (
+//             <p
+//               className={`text-base-content/70 leading-relaxed line-clamp-3 ${styles.excerpt}`}
+//             >
+//               {blog.excerpt}
+//             </p>
+//           )}
+
+//           {/* Metadata */}
+//           <div className="flex items-center justify-between pt-4 border-t border-base-300/30">
+//             <div className="flex items-center gap-4 text-base-content/60">
+//               {/* Author */}
+//               <div className="flex items-center gap-2">
+//                 <div className="avatar">
+//                   <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
+//                     <User className="w-3 h-3 text-primary" />
+//                   </div>
+//                 </div>
+//                 <span className="font-medium text-sm">{blog.author_name}</span>
+//               </div>
+
+//               {/* Date */}
+//               <div className="flex items-center gap-1">
+//                 <Calendar className="w-4 h-4" />
+//                 <span className="text-sm">
+//                   {new Date(blog.createdAt).toLocaleDateString("en-US", {
+//                     month: "short",
+//                     day: "numeric",
+//                     year: "numeric",
+//                   })}
+//                 </span>
+//               </div>
+//             </div>
+
+//             {/* Read Time */}
+//             {blog.read_time && (
+//               <div className="flex items-center gap-1 text-base-content/50">
+//                 <Clock className="w-4 h-4" />
+//                 <span className="text-sm">{blog.read_time} min read</span>
+//               </div>
+//             )}
+//           </div>
+
+//           {/* Tags */}
+//           {blog.tags && (
+//             <div className="flex flex-wrap gap-2 pt-2">
+//               {blog.tags
+//                 .split(",")
+//                 .slice(0, 2)
+//                 .map((tag, tagIndex) => (
+//                   <span
+//                     key={tagIndex}
+//                     className="badge badge-outline badge-sm text-base-content/60 hover:badge-primary hover:text-primary-content transition-all duration-200"
+//                   >
+//                     {tag.trim()}
+//                   </span>
+//                 ))}
+//               {blog.tags.split(",").length > 2 && (
+//                 <span className="badge badge-ghost badge-sm text-base-content/40">
+//                   +{blog.tags.split(",").length - 2}
+//                 </span>
+//               )}
+//             </div>
+//           )}
+
+//           {/* CTA Button */}
+//           <div className="pt-4">
+//             <div
+//               className={`btn btn-warning rounded-xl w-full group/btn transition-all duration-300 transform hover:scale-105 hover:shadow-lg flex items-center justify-center gap-2 ${styles.button}`}
+//             >
+//               <span>Read Story</span>
+//               <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform duration-300" />
+//             </div>
+//           </div>
+//         </div>
+
+//         {/* Hover Effect Border */}
+//         <div className="absolute inset-0 rounded-3xl border-2 border-transparent group-hover:border-warning/30 transition-all duration-300 pointer-events-none" />
+//       </article>
+//     </Link>
+//   );
+// };
+
+// Alternative Compact Collage Layout - Add this variant option:
+
+// Masonry Style Card Component:
+
+const MasonryFeaturedCard = ({
+  blog,
+  index,
+  total,
+}: {
+  blog: Blog;
+  index: number;
+  total: number;
+}) => {
+  const getHeightClass = () => {
+    if (total === 1) return "min-h-96";
+    if (total === 2) return index === 0 ? "min-h-96" : "min-h-80";
     if (total === 3) {
-      if (index === 0) return 'primary';
-      if (index === 1) return 'secondary';
-      return 'tertiary';
+      if (index === 0) return "min-h-96";
+      if (index === 1) return "min-h-80";
+      return "min-h-72";
     }
-    return 'primary';
+    return "min-h-80";
   };
-
-  const variant = getCardVariant();
-  
-  const variantStyles = {
-    primary: {
-      container: "lg:col-span-2 lg:row-span-2 group cursor-pointer",
-      image: "h-80 lg:h-96",
-      content: "p-6 lg:p-8",
-      title: "text-2xl lg:text-4xl font-bold",
-      excerpt: "text-base lg:text-lg",
-      badge: "px-4 py-2 text-sm",
-      stats: "text-sm",
-      button: "btn-lg"
-    },
-    secondary: {
-      container: "group cursor-pointer",
-      image: "h-64",
-      content: "p-6",
-      title: "text-xl font-bold",
-      excerpt: "text-sm",
-      badge: "px-3 py-1 text-xs",
-      stats: "text-xs",
-      button: "btn-sm"
-    },
-    tertiary: {
-      container: "group cursor-pointer",
-      image: "h-64",
-      content: "p-6",
-      title: "text-xl font-bold",
-      excerpt: "text-sm",
-      badge: "px-3 py-1 text-xs",
-      stats: "text-xs",
-      button: "btn-sm"
-    }
-  };
-
-  const styles = variantStyles[variant];
 
   return (
-    <Link href={`/blogs/${blog.slug}`} className={styles.container}>
+    <Link
+      href={`/blogs/${blog.slug}`}
+      className={`group cursor-pointer ${getHeightClass()}`}
+    >
       <article className="relative bg-linear-to-br from-base-100 to-base-200 border border-base-300/30 rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-500 hover:scale-105 overflow-hidden h-full">
-        {/* Premium Featured Badge */}
-        <div className="absolute top-4 left-4 z-20">
-          <div className="bg-linear-to-r from-warning to-warning/80 text-warning-content rounded-full shadow-lg flex items-center gap-2 font-semibold backdrop-blur-sm border border-warning/20 transition-all duration-300 group-hover:scale-110">
-            <Star className="w-3 h-3 fill-current" />
-            <span>Featured</span>
-          </div>
-        </div>
-
-        {/* View Count */}
-        <div className="absolute top-4 right-4 z-20">
-          <div className="bg-base-100/90 backdrop-blur-sm text-base-content px-3 py-1 rounded-full shadow-lg flex items-center gap-2 text-sm border border-base-300/30">
-            <Eye className="w-3 h-3" />
-            <span>{blog.view_count || 0}</span>
-          </div>
-        </div>
-
-        {/* Image with Overlay */}
+        {/* Background Image */}
         {blog.cover_image && (
-          <figure className={`relative overflow-hidden ${styles.image}`}>
+          <figure className="absolute inset-0">
             <img
               src={blog.cover_image}
               alt={blog.title}
               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-              loading={index === 0 ? "eager" : "lazy"}
             />
-            {/* Gradient Overlay */}
-            <div className="absolute inset-0 bg-linear-to-t from-base-100/60 via-base-100/20 to-transparent" />
-            {/* Shine Effect */}
-            <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+            <div className="absolute inset-0 bg-linear-to-t from-base-100/80 via-base-100/40 to-transparent" />
           </figure>
         )}
 
         {/* Content */}
-        <div className={`relative z-20 space-y-4 ${styles.content}`}>
+        <div className="relative z-20 p-6 h-full flex flex-col justify-end">
+          {/* Badge */}
+          <div className="mb-4">
+            <div className="bg-linear-to-r from-warning to-warning/80 text-warning-content px-3 py-1 rounded-full shadow-lg inline-flex items-center gap-2 text-sm font-semibold backdrop-blur-sm">
+              <Star className="w-3 h-3 fill-current" />
+              <span>Featured</span>
+            </div>
+          </div>
+
           {/* Title */}
-          <h3 className={`text-base-content group-hover:text-primary transition-colors duration-300 leading-tight line-clamp-3 ${styles.title}`}>
+          <h3 className="text-xl font-bold text-base-content group-hover:text-primary transition-colors duration-300 leading-tight line-clamp-3 mb-3">
             {blog.title}
           </h3>
 
           {/* Excerpt */}
           {blog.excerpt && (
-            <p className={`text-base-content/70 leading-relaxed line-clamp-3 ${styles.excerpt}`}>
+            <p className="text-base-content/70 text-sm leading-relaxed line-clamp-2 mb-4">
               {blog.excerpt}
             </p>
           )}
 
-          {/* Metadata */}
+          {/* Footer */}
           <div className="flex items-center justify-between pt-4 border-t border-base-300/30">
-            <div className="flex items-center gap-4 text-base-content/60">
-              {/* Author */}
-              <div className="flex items-center gap-2">
-                <div className="avatar">
-                  <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
-                    <User className="w-3 h-3 text-primary" />
-                  </div>
-                </div>
-                <span className="font-medium text-sm">{blog.author_name}</span>
-              </div>
-
-              {/* Date */}
+            <div className="flex items-center gap-3 text-sm text-base-content/60">
               <div className="flex items-center gap-1">
-                <Calendar className="w-4 h-4" />
-                <span className="text-sm">
-                  {new Date(blog.createdAt).toLocaleDateString('en-US', {
-                    month: 'short',
-                    day: 'numeric',
-                    year: 'numeric'
-                  })}
-                </span>
+                <User className="w-4 h-4" />
+                <span>{blog.author_name}</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Eye className="w-4 h-4" />
+                <span>{blog.view_count || 0}</span>
               </div>
             </div>
 
-            {/* Read Time */}
-            {blog.read_time && (
-              <div className="flex items-center gap-1 text-base-content/50">
-                <Clock className="w-4 h-4" />
-                <span className="text-sm">{blog.read_time} min read</span>
-              </div>
-            )}
-          </div>
-
-          {/* Tags */}
-          {blog.tags && (
-            <div className="flex flex-wrap gap-2 pt-2">
-              {blog.tags.split(',').slice(0, 2).map((tag, tagIndex) => (
-                <span
-                  key={tagIndex}
-                  className="badge badge-outline badge-sm text-base-content/60 hover:badge-primary hover:text-primary-content transition-all duration-200"
-                >
-                  {tag.trim()}
-                </span>
-              ))}
-              {blog.tags.split(',').length > 2 && (
-                <span className="badge badge-ghost badge-sm text-base-content/40">
-                  +{blog.tags.split(',').length - 2}
-                </span>
-              )}
-            </div>
-          )}
-
-          {/* CTA Button */}
-          <div className="pt-4">
-            <div className={`btn btn-warning rounded-xl w-full group/btn transition-all duration-300 transform hover:scale-105 hover:shadow-lg flex items-center justify-center gap-2 ${styles.button}`}>
-              <span>Read Story</span>
+            <div className="btn btn-warning btn-sm rounded-xl group/btn transition-all duration-300 transform hover:scale-105">
               <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform duration-300" />
             </div>
           </div>
         </div>
-
-        {/* Hover Effect Border */}
-        <div className="absolute inset-0 rounded-3xl border-2 border-transparent group-hover:border-warning/30 transition-all duration-300 pointer-events-none" />
       </article>
     </Link>
   );

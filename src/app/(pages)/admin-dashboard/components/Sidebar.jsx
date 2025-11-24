@@ -17,6 +17,7 @@ import {
   FolderGit2,
   BookOpenCheck,
   Settings,
+  User2,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { ADMIN_FEATURES } from "../../../config/features";
@@ -49,6 +50,13 @@ const Sidebar = ({
       icon: <Palette className="w-5 h-5" />,
       enabled: ADMIN_FEATURES.theme,
       description: t("Customize appearance"),
+    },
+     {
+      id: "usermanage",
+      label: t("User Management"),
+      icon: <User2 className="w-5 h-5" />,
+      enabled: ADMIN_FEATURES.usermanage,
+      description: t("User accounts & roles"),
     },
     {
       id: "systeminfo",

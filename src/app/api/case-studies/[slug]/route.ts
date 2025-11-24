@@ -34,7 +34,8 @@ export async function GET(
           b.view_count,
           b.order_number,
           u.name AS author_name,
-          u.email AS author_email
+          u.email AS author_email,
+          u.image AS author_image
         FROM case_studies b
         LEFT JOIN user u ON b.author_id = u.id
         WHERE b.status = 'published' AND b.slug = ?

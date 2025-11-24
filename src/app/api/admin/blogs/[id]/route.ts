@@ -15,6 +15,7 @@ export async function GET(
       SELECT 
         b.*,
         u.name AS author_name,
+        u.image AS author_image,
         u.email AS author_email,
         GROUP_CONCAT(DISTINCT t.name) AS tags,
         GROUP_CONCAT(DISTINCT c.name) AS categories

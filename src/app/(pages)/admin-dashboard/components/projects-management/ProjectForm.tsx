@@ -25,12 +25,14 @@ import {
   FileEdit,
   AlertCircle,
 } from "lucide-react";
+import { useAuth } from "../../../../context/auth/authContext";
 
 const EditorJSEditor = dynamic(() => import("../EditorJSEditor"), {
   ssr: false,
 });
 
 export default function ProjectForm({ initialData, onSaved, onCancel }: any) {
+  const { user } = useAuth();
   const [title, setTitle] = useState(initialData?.title || "");
   const [slug, setSlug] = useState(initialData?.slug || "");
   const [coverImage, setCoverImage] = useState(initialData?.cover_image || "");
@@ -202,8 +204,8 @@ export default function ProjectForm({ initialData, onSaved, onCancel }: any) {
       tags: tags.map((t) => t.value),
       categories: categories.map((c) => c.value),
       order_number: initialData?.order_number ?? null, // 👈 added
+      author_id: user.id,
     };
-
 
     setSaving(true);
     try {
@@ -271,7 +273,9 @@ export default function ProjectForm({ initialData, onSaved, onCancel }: any) {
           </div>
           <div>
             <h1 className="text-3xl font-bold bg-linear-to-r from-base-content to-base-content/70 bg-clip-text text-transparent">
-              {initialData?.id ? "Edit Project Post" : "Create New Project Post"}
+              {initialData?.id
+                ? "Edit Project Post"
+                : "Create New Project Post"}
             </h1>
             <p className="text-base-content/70 mt-2 text-lg leading-relaxed">
               {initialData?.id

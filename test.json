@@ -1,0 +1,290 @@
+{
+  "roles": {
+    "superadmin": {
+      "title": "Platform Super Administrator",
+      "scope": "system",
+      "appliesTo": "user",
+      "hierarchy_level": 1,
+      "permissions": "*",
+      "default": false,
+      "self_signup": true,
+      "custom_dashboard": true,
+      "is_active": true,
+      "is_editable": false,
+      "belongs_to_organization": false,
+      "allowOrganizationMembership": true,
+      "description": "Owns the entire platform with all permissions.",
+      "color": "#fcba03",
+      "signup": { "additionalFields": [], "additionalInfoOptional": false }
+    },
+    "admin": {
+      "title": "Platform Administrator",
+      "scope": "system",
+      "appliesTo": "user",
+      "hierarchy_level": 2,
+      "permissions": [
+        "roles:view",
+        "roles:update",
+        "users:view",
+        "users:update",
+        "organizations:view",
+        "organizations:update"
+      ],
+      "default": false,
+      "self_signup": true,
+      "custom_dashboard": true,
+      "is_active": true,
+      "is_editable": true,
+      "belongs_to_organization": false,
+      "allowOrganizationMembership": true,
+      "description": "Manages users and organizations on the platform.",
+      "color": "#eb4034",
+      "signup": { "additionalFields": [], "additionalInfoOptional": false }
+    },
+    "org_superadmin": {
+      "title": "Organization Super Admin",
+      "scope": "organization",
+      "appliesTo": "member",
+      "hierarchy_level": 4,
+      "permissions": [
+        "org:settings:update",
+        "org:members:create",
+        "org:members:view",
+        "org:members:update",
+        "org:members:delete",
+        "org:billing:view",
+        "org:billing:update",
+        "org:data:export"
+      ],
+      "default": false,
+      "self_signup": true,
+      "custom_dashboard": true,
+      "is_active": true,
+      "is_editable": true,
+      "belongs_to_organization": true,
+      "description": "Top-level administrator inside a specific organization.",
+      "color": "#2ecc71",
+      "signup": {
+        "additionalFields": [
+          {
+            "name": "organizationName",
+            "type": "text",
+            "label": "Organization Name",
+            "required": true,
+            "placeholder": "Enter organization name",
+            "icon": "Building"
+          },
+          {
+            "name": "organizationSlug",
+            "type": "text",
+            "label": "Organization Slug",
+            "required": true,
+            "placeholder": "my-organization",
+            "icon": "Link",
+            "validation": {
+              "pattern": "^[a-z0-9-]+$",
+              "message": "Slug can only contain lowercase letters, numbers, and hyphens"
+            }
+          },
+          {
+            "name": "organizationType",
+            "type": "select",
+            "label": "Organization Type",
+            "required": true,
+            "icon": "Building",
+            "options": [
+              { "value": "healthcare", "label": "Healthcare Provider" },
+              { "value": "education", "label": "Educational Institution" },
+              { "value": "business", "label": "Business Corporation" },
+              { "value": "nonprofit", "label": "Non-Profit Organization" },
+              { "value": "government", "label": "Government Agency" },
+              { "value": "other", "label": "Other" }
+            ]
+          },
+          {
+            "name": "organizationSize",
+            "type": "select",
+            "label": "Organization Size",
+            "required": true,
+            "icon": "Users",
+            "options": [
+              { "value": "1-10", "label": "1-10 employees" },
+              { "value": "11-50", "label": "11-50 employees" },
+              { "value": "51-200", "label": "51-200 employees" },
+              { "value": "201-500", "label": "201-500 employees" },
+              { "value": "501-1000", "label": "501-1000 employees" },
+              { "value": "1000+", "label": "1000+ employees" }
+            ]
+          },
+          {
+            "name": "organizationIndustry",
+            "type": "text",
+            "label": "Industry",
+            "required": false,
+            "placeholder": "e.g., Technology, Healthcare, Education",
+            "icon": "Briefcase"
+          },
+          {
+            "name": "organizationWebsite",
+            "type": "url",
+            "label": "Website",
+            "required": false,
+            "placeholder": "https://example.com",
+            "icon": "Globe"
+          },
+          {
+            "name": "organizationDescription",
+            "type": "textarea",
+            "label": "Organization Description",
+            "required": false,
+            "placeholder": "Brief description of your organization...",
+            "icon": "FileText"
+          },
+          {
+            "name": "organizationLogo",
+            "type": "file",
+            "label": "Organization Logo",
+            "required": false,
+            "icon": "Camera"
+          },
+          {
+            "name": "organizationAddress",
+            "type": "text",
+            "label": "Address",
+            "required": false,
+            "placeholder": "Street address",
+            "icon": "MapPin"
+          },
+          {
+            "name": "organizationCity",
+            "type": "text",
+            "label": "City",
+            "required": false,
+            "placeholder": "City",
+            "icon": "MapPin"
+          },
+          {
+            "name": "organizationCountry",
+            "type": "text",
+            "label": "Country",
+            "required": false,
+            "placeholder": "Country",
+            "icon": "MapPin"
+          }
+        ],
+        "additionalInfoOptional": false
+      }
+    },
+    "org_admin": {
+      "title": "Organization Admin",
+      "scope": "organization",
+      "appliesTo": "member",
+      "hierarchy_level": 5,
+      "permissions": [
+        "org:members:create",
+        "org:members:view",
+        "org:members:update",
+        "org:resources:view",
+        "org:resources:update"
+      ],
+      "default": true,
+      "self_signup": true,
+      "custom_dashboard": true,
+      "is_active": true,
+      "is_editable": true,
+      "belongs_to_organization": true,
+      "description": "Admin within an organization, with operational control.",
+      "color": "#3498db",
+      "signup": { "additionalFields": [], "additionalInfoOptional": false }
+    },
+    "customer": {
+      "title": "Customer",
+      "scope": "public",
+      "appliesTo": "user",
+      "hierarchy_level": 8,
+      "permissions": [
+        "self:profile:view",
+        "self:profile:update",
+        "self:orders:create",
+        "self:orders:view"
+      ],
+      "default": true,
+      "self_signup": true,
+      "custom_dashboard": false,
+      "is_active": true,
+      "is_editable": true,
+      "belongs_to_organization": false,
+      "allowOrganizationMembership": false,
+      "description": "General customer account, not tied to a specific organization.",
+      "color": "#4287f5",
+      "signup": {
+        "additionalFields": [
+          {
+            "name": "phone",
+            "type": "tel",
+            "label": "Phone Number",
+            "required": true,
+            "placeholder": "+1 (555) 123-4567",
+            "icon": "Phone",
+            "validation": {
+              "pattern": "^\\\\+?[0-9]{10,15}$",
+              "message": "Please enter a valid phone number"
+            }
+          },
+          {
+            "name": "company",
+            "type": "text",
+            "label": "Company Name",
+            "required": false,
+            "placeholder": "Your company name",
+            "icon": "Building"
+          },
+          {
+            "name": "gender",
+            "type": "select",
+            "label": "Gender",
+            "required": true,
+            "icon": "User",
+            "options": [
+              { "value": "male", "label": "Male" },
+              { "value": "female", "label": "Female" },
+              { "value": "other", "label": "Other" },
+              { "value": "prefer_not_to_say", "label": "Prefer not to say" }
+            ]
+          },
+          {
+            "name": "newsletter",
+            "type": "checkbox",
+            "label": "Subscribe to newsletter",
+            "required": false,
+            "default": true
+          },
+          {
+            "name": "age",
+            "type": "number",
+            "label": "Your Age",
+            "required": true,
+            "validation": {
+              "min": 2,
+              "max": 70,
+              "message": "Age must be between 2 and 70"
+            }
+          },
+          {
+            "name": "bio",
+            "type": "textarea",
+            "label": "Bio",
+            "required": false
+          },
+          {
+            "name": "avatar",
+            "type": "file",
+            "label": "Upload Avatar",
+            "required": false
+          }
+        ],
+        "additionalInfoOptional": true
+      }
+    }
+  }
+}
