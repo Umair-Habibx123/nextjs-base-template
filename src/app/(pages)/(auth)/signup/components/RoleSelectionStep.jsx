@@ -17,14 +17,14 @@ const RoleSelectionStep = ({ availableRoles, selectedRole, onRoleSelect, onNextS
     return <IconComponent className="w-6 h-6" />;
   };
 
-  const getRoleColor = (role) => {
-    return role.color || "#4287f5";
+  const getRoleColor = (app_role) => {
+    return app_role.color || "#4287f5";
   };
 
-  const getRoleBadge = (role) => {
-    if (role.scope === "system") {
+  const getRoleBadge = (app_role) => {
+    if (app_role.scope === "system") {
       return { text: "System", color: "bg-error/20 text-error" };
-    } else if (role.scope === "organization") {
+    } else if (app_role.scope === "organization") {
       return { text: "Organization", color: "bg-success/20 text-success" };
     } else {
       return { text: "Public", color: "bg-info/20 text-info" };
@@ -33,26 +33,26 @@ const RoleSelectionStep = ({ availableRoles, selectedRole, onRoleSelect, onNextS
 
   return (
     <div className="space-y-6 animate-fadeIn">
-      <div className="text-center mb-4">
+      {/* <div className="text-center mb-4">
         <p className="text-base-content/70">
           Choose your account type. You can always update your profile later.
         </p>
-      </div>
+      </div> */}
 
       <div className="grid gap-4">
-        {availableRoles.map((role) => {
-          const badge = getRoleBadge(role);
+        {availableRoles.map((app_role) => {
+          const badge = getRoleBadge(app_role);
           return (
             <div
-              key={role.value}
+              key={app_role.value}
               className={`card card-side border-2 transition-all duration-300 cursor-pointer hover:shadow-lg hover:scale-[1.02] ${
-                selectedRole === role.value
+                selectedRole === app_role.value
                   ? "border-primary bg-primary/5 shadow-md"
                   : "border-base-300 bg-base-200/50 hover:border-primary/50"
               }`}
-              onClick={() => onRoleSelect(role.value)}
+              onClick={() => onRoleSelect(app_role.value)}
               style={{
-                borderColor: selectedRole === role.value ? getRoleColor(role) : undefined
+                borderColor: selectedRole === app_role.value ? getRoleColor(app_role) : undefined
               }}
             >
               <div className="card-body p-4">
@@ -60,40 +60,40 @@ const RoleSelectionStep = ({ availableRoles, selectedRole, onRoleSelect, onNextS
                   <div className="flex items-center gap-4">
                     <div
                       className={`p-3 rounded-xl transition-colors ${
-                        selectedRole === role.value
+                        selectedRole === app_role.value
                           ? "text-white"
                           : "bg-base-300 text-base-content"
                       }`}
                       style={{
-                        backgroundColor: selectedRole === role.value ? getRoleColor(role) : undefined
+                        backgroundColor: selectedRole === app_role.value ? getRoleColor(app_role) : undefined
                       }}
                     >
-                      {getRoleIcon(role.value)}
+                      {getRoleIcon(app_role.value)}
                     </div>
                     <div className="text-left flex-1">
                       <div className="flex items-center gap-2 mb-1">
-                        <h3 className="font-bold text-base-content">{role.label}</h3>
+                        <h3 className="font-bold text-base-content">{app_role.label}</h3>
                         <span className={`badge badge-sm ${badge.color}`}>
                           {badge.text}
                         </span>
                       </div>
                       <p className="text-sm text-base-content/70">
-                        {role.description}
+                        {app_role.description}
                       </p>
                     </div>
                   </div>
                   <div
                     className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${
-                      selectedRole === role.value
+                      selectedRole === app_role.value
                         ? "text-white"
                         : "border-base-300"
                     }`}
                     style={{
-                      backgroundColor: selectedRole === role.value ? getRoleColor(role) : undefined,
-                      borderColor: selectedRole === role.value ? getRoleColor(role) : undefined
+                      backgroundColor: selectedRole === app_role.value ? getRoleColor(app_role) : undefined,
+                      borderColor: selectedRole === app_role.value ? getRoleColor(app_role) : undefined
                     }}
                   >
-                    {selectedRole === role.value && <Check className="w-4 h-4" />}
+                    {selectedRole === app_role.value && <Check className="w-4 h-4" />}
                   </div>
                 </div>
               </div>

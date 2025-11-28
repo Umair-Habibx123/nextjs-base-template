@@ -1,5 +1,5 @@
 // src/lib/email-templates.ts
-import { sendEmail } from "@/app/utils/emails/sendVerificationEmail";
+import { sendEmail } from "@/app/utils/emails/sendEmail";
 import getDb from "../app/database/db";
 
 export async function getEmailTemplate(name: string) {
@@ -75,11 +75,7 @@ export async function sendTemplatedEmail({
         .join(" ");
 
     // Send email using your existing sendEmail function
-    const result = await sendEmail({
-      to,
-      subject: emailSubject,
-      html,
-    });
+    const result = await sendEmail(to, emailSubject, html);
 
     return {
       success: true,

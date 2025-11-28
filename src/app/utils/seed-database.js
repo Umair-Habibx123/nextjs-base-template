@@ -1,6 +1,5 @@
 import Database from "better-sqlite3";
 import path from "path";
-import fs from "fs";
 import { auth } from "@/lib/auth";
 
 export async function seedDatabase() {
@@ -10,8 +9,7 @@ export async function seedDatabase() {
   const db = new Database(dbPath);
 
   try {
-    console.log("🌱 Starting database seeding...");
-
+ 
     // Seed announcement settings
     const announcementSettingsCount = db
       .prepare("SELECT COUNT(*) AS c FROM announcement_settings")
@@ -22,7 +20,6 @@ export async function seedDatabase() {
         `INSERT INTO announcement_settings (theme, bg_color, text_color, speed) 
          VALUES ('scroll-left', '#2563eb', '#ffffff', 25)`
       ).run();
-      console.log("✅ Announcement settings seeded");
     }
 
     // Seed global settings
@@ -35,7 +32,6 @@ export async function seedDatabase() {
          (site_password_enabled, site_under_construction, createdAt, updatedAt)
          VALUES (0, 0, strftime('%s','now'), strftime('%s','now'))`
       ).run();
-      console.log("✅ Global settings seeded");
     }
 
     // Seed email templates
@@ -47,7 +43,6 @@ export async function seedDatabase() {
     // Seed users
     await seedUsers();
 
-    console.log("🎉 Database seeding completed successfully!");
   } catch (error) {
     console.error("❌ Database seeding failed:", error);
     throw error;
@@ -548,6 +543,289 @@ async function seedEmailTemplates(db) {
         nextId: 6,
       }),
     },
+
+    {
+      name: "magic-link",
+      html: `
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { 
+      font-family: Arial, sans-serif; 
+      line-height: 1.6; 
+      color: #333; 
+      margin: 0; 
+      padding: 0; 
+      background-color: #f6f9fc;
+    }
+    .container { 
+      max-width: 600px; 
+      margin: 0 auto; 
+      padding: 20px; 
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .header { 
+      text-align: center; 
+      padding: 20px 0;
+      border-bottom: 1px solid #eaeaea;
+    }
+    .button { 
+      display: inline-block; 
+      padding: 14px 28px; 
+      background-color: #007bff; 
+      color: white; 
+      text-decoration: none; 
+      border-radius: 6px; 
+      margin: 25px 0;
+      font-size: 16px;
+      font-weight: bold;
+      text-align: center;
+    }
+    .security-notice { 
+      background-color: #fff3cd; 
+      border: 1px solid #ffeaa7; 
+      padding: 15px; 
+      border-radius: 6px; 
+      margin: 20px 0;
+      font-size: 14px;
+    }
+    .footer { 
+      margin-top: 30px; 
+      font-size: 12px; 
+      color: #666; 
+      text-align: center;
+      border-top: 1px solid #eaeaea;
+      padding-top: 20px;
+    }
+    .expiry-notice { 
+      background-color: #e7f3ff; 
+      border: 1px solid #b3d9ff; 
+      padding: 12px; 
+      border-radius: 4px; 
+      margin: 15px 0;
+      text-align: center;
+    }
+    .code-container {
+      background-color: #f8f9fa;
+      border: 1px dashed #dee2e6;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 4px;
+      word-break: break-all;
+      font-family: monospace;
+      font-size: 14px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h2 style="margin: 0; color: #2c3e50;">Magic Link Sign In</h2>
+    </div>
+    
+    <p>Hello,</p>
+    
+    <p>You requested a magic link to sign in to your account. Click the button below to securely log in:</p>
+    
+    <div style="text-align: center;">
+      <a href="{{url}}" class="button">Sign In Securely</a>
+    </div>
+
+    <div class="expiry-notice">
+      <p style="margin: 0;"><strong>This magic link will expire in 5 minutes</strong> for security reasons.</p>
+    </div>
+
+    <div class="security-notice">
+      <p style="margin: 0 0 10px 0;"><strong>Security Notice:</strong></p>
+      <ul style="margin: 0; padding-left: 20px;">
+        <li>This link can only be used once</li>
+        <li>Never share this link with anyone</li>
+        <li>If you didn't request this sign in, please ignore this email</li>
+      </ul>
+    </div>
+
+    <p><strong>Alternative method:</strong> If the button doesn't work, copy and paste this URL into your browser:</p>
+    
+    <div class="code-container">
+      {{url}}
+    </div>
+
+    <div class="footer">
+      <p>This is an automated email. Please do not reply to this message.</p>
+      <p>&copy; ${new Date().getFullYear()} ${
+        "Your App"
+      }. All rights reserved.</p>
+    </div>
+  </div>
+</body>
+</html>
+  `,
+      json: JSON.stringify({
+        canvasItems: [
+          {
+            id: 1,
+            name: "Text",
+            type: "element",
+            content: "Magic Link Sign In",
+            fontSize: "28px",
+            color: "#2c3e50",
+            backgroundColor: "#ffffff",
+            alignment: "center",
+            fontStyles: ["bold"],
+            paddingTop: 30,
+            paddingRight: 20,
+            paddingBottom: 15,
+            paddingLeft: 20,
+          },
+          {
+            id: 2,
+            name: "Text",
+            type: "element",
+            content: "Hello,",
+            fontSize: "16px",
+            color: "#333333",
+            backgroundColor: "#ffffff",
+            alignment: "left",
+            fontStyles: [],
+            paddingTop: 20,
+            paddingRight: 20,
+            paddingBottom: 10,
+            paddingLeft: 20,
+          },
+          {
+            id: 3,
+            name: "Text",
+            type: "element",
+            content:
+              "You requested a magic link to sign in to your account. Click the button below to securely log in:",
+            fontSize: "16px",
+            color: "#333333",
+            backgroundColor: "#ffffff",
+            alignment: "left",
+            fontStyles: [],
+            paddingTop: 10,
+            paddingRight: 20,
+            paddingBottom: 20,
+            paddingLeft: 20,
+          },
+          {
+            id: 4,
+            name: "Button",
+            type: "element",
+            content: "Sign In Securely",
+            fontSize: "16px",
+            buttonColor: "#007bff",
+            buttonShape: "rounded-lg",
+            buttonUrl: "{{url}}",
+            alignment: "center",
+            paddingTop: 10,
+            paddingRight: 20,
+            paddingBottom: 10,
+            paddingLeft: 20,
+          },
+          {
+            id: 5,
+            name: "Text",
+            type: "element",
+            content:
+              "This magic link will expire in 5 minutes for security reasons.",
+            fontSize: "14px",
+            color: "#004085",
+            backgroundColor: "#e7f3ff",
+            alignment: "center",
+            fontStyles: [],
+            paddingTop: 15,
+            paddingRight: 20,
+            paddingBottom: 15,
+            paddingLeft: 20,
+          },
+          {
+            id: 6,
+            name: "Text",
+            type: "element",
+            content: "Security Notice:",
+            fontSize: "16px",
+            color: "#856404",
+            backgroundColor: "#fff3cd",
+            alignment: "left",
+            fontStyles: ["bold"],
+            paddingTop: 15,
+            paddingRight: 20,
+            paddingBottom: 10,
+            paddingLeft: 20,
+          },
+          {
+            id: 7,
+            name: "Text",
+            type: "element",
+            content:
+              "• This link can only be used once\n• Never share this link with anyone\n• If you didn't request this sign in, please ignore this email",
+            fontSize: "14px",
+            color: "#856404",
+            backgroundColor: "#fff3cd",
+            alignment: "left",
+            fontStyles: [],
+            paddingTop: 10,
+            paddingRight: 20,
+            paddingBottom: 15,
+            paddingLeft: 20,
+          },
+          {
+            id: 8,
+            name: "Text",
+            type: "element",
+            content:
+              "Alternative method: If the button doesn't work, copy and paste this URL into your browser:",
+            fontSize: "14px",
+            color: "#333333",
+            backgroundColor: "#ffffff",
+            alignment: "left",
+            fontStyles: [],
+            paddingTop: 20,
+            paddingRight: 20,
+            paddingBottom: 10,
+            paddingLeft: 20,
+          },
+          {
+            id: 9,
+            name: "Text",
+            type: "element",
+            content: "{{url}}",
+            fontSize: "12px",
+            color: "#000000",
+            backgroundColor: "#f8f9fa",
+            alignment: "center",
+            fontStyles: [],
+            paddingTop: 15,
+            paddingRight: 20,
+            paddingBottom: 15,
+            paddingLeft: 20,
+          },
+          {
+            id: 10,
+            name: "Text",
+            type: "element",
+            content:
+              "This is an automated email. Please do not reply to this message.",
+            fontSize: "12px",
+            color: "#666666",
+            backgroundColor: "#ffffff",
+            alignment: "center",
+            fontStyles: [],
+            paddingTop: 20,
+            paddingRight: 20,
+            paddingBottom: 10,
+            paddingLeft: 20,
+          },
+        ],
+        layoutRows: [],
+        nextId: 11,
+      }),
+    },
   ];
 
   const templateStmt = db.prepare(`
@@ -559,7 +837,6 @@ async function seedEmailTemplates(db) {
     templateStmt.run(template.name, template.html, template.json);
   });
 
-  console.log("✅ Email templates seeded");
 }
 
 async function seedDefaultContent(db) {
@@ -586,17 +863,12 @@ async function seedDefaultContent(db) {
   );
   defaultCategories.forEach((category) => categoryStmt.run(category));
 
-  console.log("✅ Default content seeded");
 }
 
 async function seedUsers() {
   const adminEmail = process.env.SUPER_ADMIN_EMAIL;
   const adminPassword = process.env.SUPER_ADMIN_PASSWORD;
   const adminName = process.env.SUPER_ADMIN_NAME;
-
-  const userEmail = process.env.DEFAULT_USER_EMAIL;
-  const userPassword = process.env.DEFAULT_USER_PASSWORD;
-  const userName = process.env.DEFAULT_USER_NAME;
 
   const createSafeUser = async (payload) => {
     try {
@@ -617,27 +889,29 @@ async function seedUsers() {
     name: adminName,
     role: "superadmin",
     data: {
+      app_role: "superadmin",
+      emailVerified: true,
       image:
         "https://tse4.mm.bing.net/th/id/OIP.5-Bgjm2pNzA2mLrHsB6V3gHaHa?cb=ucfimg2ucfimg=1&rs=1&pid=ImgDetMain&o=7&rm=3",
     },
   });
 
-  const userRes = await createSafeUser({
-    email: userEmail,
-    password: userPassword,
-    name: userName,
-    role: "user",
-    data: {
-      image:
-        "https://tse3.mm.bing.net/th/id/OIP.N6HHUrNv4bsSKj5VVZXsMAHaHQ?cb=ucfimg2ucfimg=1&rs=1&pid=ImgDetMain&o=7&rm=3",
-    },
-  });
-  console.log("✅ Users seeded");
+  // const userRes = await createSafeUser({
+  //   email: userEmail,
+  //   password: userPassword,
+  //   name: userName,
+  //   role: "user",
+  //   app_role: "user",
+  //   data: {
+  //     image:
+  //       "https://tse3.mm.bing.net/th/id/OIP.N6HHUrNv4bsSKj5VVZXsMAHaHQ?cb=ucfimg2ucfimg=1&rs=1&pid=ImgDetMain&o=7&rm=3",
+  //   },
+  // });
 
   return Response.json({
     success: true,
     admin: adminRes,
-    user: userRes,
+    // user: userRes,
     message: "Users seeding completed",
   });
 }

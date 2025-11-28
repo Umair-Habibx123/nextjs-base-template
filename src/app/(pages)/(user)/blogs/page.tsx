@@ -77,7 +77,7 @@ export default function BlogsPage() {
 
   useEffect(() => {
     setLoading(true);
-    fetch(`/api/blogs?page=${page}&limit=12`)
+    fetch(`/api/user/blogs?page=${page}&limit=12`)
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {

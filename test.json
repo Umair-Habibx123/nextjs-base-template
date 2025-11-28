@@ -1,290 +1,481 @@
-{
-  "roles": {
-    "superadmin": {
-      "title": "Platform Super Administrator",
-      "scope": "system",
-      "appliesTo": "user",
-      "hierarchy_level": 1,
-      "permissions": "*",
-      "default": false,
-      "self_signup": true,
-      "custom_dashboard": true,
-      "is_active": true,
-      "is_editable": false,
-      "belongs_to_organization": false,
-      "allowOrganizationMembership": true,
-      "description": "Owns the entire platform with all permissions.",
-      "color": "#fcba03",
-      "signup": { "additionalFields": [], "additionalInfoOptional": false }
-    },
-    "admin": {
-      "title": "Platform Administrator",
-      "scope": "system",
-      "appliesTo": "user",
-      "hierarchy_level": 2,
-      "permissions": [
-        "roles:view",
-        "roles:update",
-        "users:view",
-        "users:update",
-        "organizations:view",
-        "organizations:update"
-      ],
-      "default": false,
-      "self_signup": true,
-      "custom_dashboard": true,
-      "is_active": true,
-      "is_editable": true,
-      "belongs_to_organization": false,
-      "allowOrganizationMembership": true,
-      "description": "Manages users and organizations on the platform.",
-      "color": "#eb4034",
-      "signup": { "additionalFields": [], "additionalInfoOptional": false }
-    },
-    "org_superadmin": {
-      "title": "Organization Super Admin",
-      "scope": "organization",
-      "appliesTo": "member",
-      "hierarchy_level": 4,
-      "permissions": [
-        "org:settings:update",
-        "org:members:create",
-        "org:members:view",
-        "org:members:update",
-        "org:members:delete",
-        "org:billing:view",
-        "org:billing:update",
-        "org:data:export"
-      ],
-      "default": false,
-      "self_signup": true,
-      "custom_dashboard": true,
-      "is_active": true,
-      "is_editable": true,
-      "belongs_to_organization": true,
-      "description": "Top-level administrator inside a specific organization.",
-      "color": "#2ecc71",
-      "signup": {
-        "additionalFields": [
-          {
-            "name": "organizationName",
-            "type": "text",
-            "label": "Organization Name",
-            "required": true,
-            "placeholder": "Enter organization name",
-            "icon": "Building"
-          },
-          {
-            "name": "organizationSlug",
-            "type": "text",
-            "label": "Organization Slug",
-            "required": true,
-            "placeholder": "my-organization",
-            "icon": "Link",
-            "validation": {
-              "pattern": "^[a-z0-9-]+$",
-              "message": "Slug can only contain lowercase letters, numbers, and hyphens"
-            }
-          },
-          {
-            "name": "organizationType",
-            "type": "select",
-            "label": "Organization Type",
-            "required": true,
-            "icon": "Building",
-            "options": [
-              { "value": "healthcare", "label": "Healthcare Provider" },
-              { "value": "education", "label": "Educational Institution" },
-              { "value": "business", "label": "Business Corporation" },
-              { "value": "nonprofit", "label": "Non-Profit Organization" },
-              { "value": "government", "label": "Government Agency" },
-              { "value": "other", "label": "Other" }
-            ]
-          },
-          {
-            "name": "organizationSize",
-            "type": "select",
-            "label": "Organization Size",
-            "required": true,
-            "icon": "Users",
-            "options": [
-              { "value": "1-10", "label": "1-10 employees" },
-              { "value": "11-50", "label": "11-50 employees" },
-              { "value": "51-200", "label": "51-200 employees" },
-              { "value": "201-500", "label": "201-500 employees" },
-              { "value": "501-1000", "label": "501-1000 employees" },
-              { "value": "1000+", "label": "1000+ employees" }
-            ]
-          },
-          {
-            "name": "organizationIndustry",
-            "type": "text",
-            "label": "Industry",
-            "required": false,
-            "placeholder": "e.g., Technology, Healthcare, Education",
-            "icon": "Briefcase"
-          },
-          {
-            "name": "organizationWebsite",
-            "type": "url",
-            "label": "Website",
-            "required": false,
-            "placeholder": "https://example.com",
-            "icon": "Globe"
-          },
-          {
-            "name": "organizationDescription",
-            "type": "textarea",
-            "label": "Organization Description",
-            "required": false,
-            "placeholder": "Brief description of your organization...",
-            "icon": "FileText"
-          },
-          {
-            "name": "organizationLogo",
-            "type": "file",
-            "label": "Organization Logo",
-            "required": false,
-            "icon": "Camera"
-          },
-          {
-            "name": "organizationAddress",
-            "type": "text",
-            "label": "Address",
-            "required": false,
-            "placeholder": "Street address",
-            "icon": "MapPin"
-          },
-          {
-            "name": "organizationCity",
-            "type": "text",
-            "label": "City",
-            "required": false,
-            "placeholder": "City",
-            "icon": "MapPin"
-          },
-          {
-            "name": "organizationCountry",
-            "type": "text",
-            "label": "Country",
-            "required": false,
-            "placeholder": "Country",
-            "icon": "MapPin"
-          }
-        ],
-        "additionalInfoOptional": false
-      }
-    },
-    "org_admin": {
-      "title": "Organization Admin",
-      "scope": "organization",
-      "appliesTo": "member",
-      "hierarchy_level": 5,
-      "permissions": [
-        "org:members:create",
-        "org:members:view",
-        "org:members:update",
-        "org:resources:view",
-        "org:resources:update"
-      ],
-      "default": true,
-      "self_signup": true,
-      "custom_dashboard": true,
-      "is_active": true,
-      "is_editable": true,
-      "belongs_to_organization": true,
-      "description": "Admin within an organization, with operational control.",
-      "color": "#3498db",
-      "signup": { "additionalFields": [], "additionalInfoOptional": false }
-    },
-    "customer": {
-      "title": "Customer",
-      "scope": "public",
-      "appliesTo": "user",
-      "hierarchy_level": 8,
-      "permissions": [
-        "self:profile:view",
-        "self:profile:update",
-        "self:orders:create",
-        "self:orders:view"
-      ],
-      "default": true,
-      "self_signup": true,
-      "custom_dashboard": false,
-      "is_active": true,
-      "is_editable": true,
-      "belongs_to_organization": false,
-      "allowOrganizationMembership": false,
-      "description": "General customer account, not tied to a specific organization.",
-      "color": "#4287f5",
-      "signup": {
-        "additionalFields": [
-          {
-            "name": "phone",
-            "type": "tel",
-            "label": "Phone Number",
-            "required": true,
-            "placeholder": "+1 (555) 123-4567",
-            "icon": "Phone",
-            "validation": {
-              "pattern": "^\\\\+?[0-9]{10,15}$",
-              "message": "Please enter a valid phone number"
-            }
-          },
-          {
-            "name": "company",
-            "type": "text",
-            "label": "Company Name",
-            "required": false,
-            "placeholder": "Your company name",
-            "icon": "Building"
-          },
-          {
-            "name": "gender",
-            "type": "select",
-            "label": "Gender",
-            "required": true,
-            "icon": "User",
-            "options": [
-              { "value": "male", "label": "Male" },
-              { "value": "female", "label": "Female" },
-              { "value": "other", "label": "Other" },
-              { "value": "prefer_not_to_say", "label": "Prefer not to say" }
-            ]
-          },
-          {
-            "name": "newsletter",
-            "type": "checkbox",
-            "label": "Subscribe to newsletter",
-            "required": false,
-            "default": true
-          },
-          {
-            "name": "age",
-            "type": "number",
-            "label": "Your Age",
-            "required": true,
-            "validation": {
-              "min": 2,
-              "max": 70,
-              "message": "Age must be between 2 and 70"
-            }
-          },
-          {
-            "name": "bio",
-            "type": "textarea",
-            "label": "Bio",
-            "required": false
-          },
-          {
-            "name": "avatar",
-            "type": "file",
-            "label": "Upload Avatar",
-            "required": false
-          }
-        ],
-        "additionalInfoOptional": true
-      }
-    }
-  }
-}
+// // src/app/(pages)/login/page.jsx
+// "use client";
+
+// import React, { useState, useEffect } from "react";
+// import { useRouter, useSearchParams } from "next/navigation";
+// import { useAuth } from "../../../context/auth/authContext";
+// import { useSessionRedirect } from "../../../hooks/useSessionRedirect";
+// import { useTranslation } from "react-i18next";
+// import { authClient } from "@/lib/client";
+// import {
+//   Mail,
+//   Lock,
+//   Loader2,
+//   LogIn,
+//   Eye,
+//   EyeOff,
+//   Shield,
+//   Sparkles,
+//   User,
+//   Key,
+//   UserPlus,
+//   AlertCircle,
+//   LayoutDashboard,
+// } from "lucide-react";
+// import { toast } from "react-toastify";
+// import Loading from "../../components/layout/Loading";
+
+// const LoginPage = () => {
+//   const [email, setEmail] = useState("");
+//   const [password, setPassword] = useState("");
+//   const [showPassword, setShowPassword] = useState(false);
+//   const [isSubmitting, setIsSubmitting] = useState(false);
+//   const [socialLoading, setSocialLoading] = useState(null);
+//   const [isMultiAccount, setIsMultiAccount] = useState(false);
+//   const { login, user, loginLoading, authLoading, socialLogin } = useAuth();
+//   const router = useRouter();
+//   const searchParams = useSearchParams();
+//   const { t } = useTranslation();
+//   const { getRedirectUrl, clearRedirectUrl } = useSessionRedirect();
+
+//   let socialConfig = {};
+//   try {
+//     const authConfig = JSON.parse(
+//       process.env.NEXT_PUBLIC_BETTER_AUTH_CONFIG || "{}"
+//     );
+//     socialConfig = authConfig.socialProviders || {};
+//   } catch (error) {
+//     console.error("Failed to parse auth config:", error);
+//   }
+
+//   const googleEnabled = socialConfig.google?.enabled === true;
+//   const githubEnabled = socialConfig.github?.enabled === true;
+
+//   useEffect(() => {
+//     return () => {
+//       // This runs ONLY when the user leaves the /login page
+//       sessionStorage.removeItem("multiAccountLogin");
+//     };
+//   }, []);
+
+//   useEffect(() => {
+//     const multiAccountFlag = sessionStorage.getItem("multiAccountLogin");
+//     const isMulti = multiAccountFlag === "true";
+
+//     // Update state (for UI)
+//     setIsMultiAccount(isMulti);
+
+//     // PREVENT redirect if multi-account mode
+//     if (!authLoading && user && !isMulti) {
+//       handlePostLoginRedirect();
+//     }
+//   }, [user, authLoading]);
+
+//   useEffect(() => {
+//     const error = searchParams.get("error");
+//     const socialCallback = searchParams.get("social");
+
+//     if (socialCallback === "callback" && error) {
+//       // Clean the URL
+//       const cleanUrl = window.location.pathname;
+//       window.history.replaceState(null, "", cleanUrl);
+
+//       switch (error) {
+//         case "signup_disabled":
+//           toast.error("No account found. Please sign up first.");
+//           break;
+
+//         case "access_denied":
+//           toast.info("Login cancelled. You can try again anytime.");
+//           break;
+
+//         default:
+//           toast.error("Login failed. Please try again or use another method.");
+//       }
+//     }
+//   }, [searchParams]);
+
+//   const handlePostLoginRedirect = () => {
+//     // Normal login flow
+//     const redirectUrl = getRedirectUrl();
+
+//     if (redirectUrl) {
+//       clearRedirectUrl();
+//       router.replace(redirectUrl);
+//     } else {
+//       let targetRoute = "/dashboard";
+
+//       if (user.role === "superadmin" && user.app_role === "superadmin") {
+//         targetRoute = "/super-admin-dashboard";
+//       } else if (user.role === "admin") {
+//         targetRoute = `/dashboard/${user.app_role}`;
+//       } else if (user.role === "user") {
+//         targetRoute = `/dashboard/${user.app_role}`;
+//       }
+
+//       router.replace(targetRoute);
+//     }
+//   };
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     setIsSubmitting(true);
+
+//     try {
+//       await login({ email, password });
+//       if (isMultiAccount) {
+//         sessionStorage.removeItem("multiAccountLogin");
+//       }
+//     } catch (error) {
+//       if (
+//         /verify/i.test(error.message) ||
+//         error.code === "EMAIL_NOT_VERIFIED" ||
+//         /email.*not.*verified/i.test(error.message)
+//       ) {
+//         toast.info("Please verify your email before logging in.");
+
+//         sessionStorage.setItem("pendingEmailVerification", email);
+
+//         router.push("/verify-email");
+//         setIsSubmitting(false);
+//         return;
+//       }
+
+//       toast.error(error.message || "Login failed");
+//       setIsSubmitting(false);
+//     }
+//   };
+
+//   const handleSocialSignup = async (provider) => {
+//     try {
+//       setSocialLoading(provider);
+
+//       // If multi-account login, store the flag before redirecting
+//       if (isMultiAccount) {
+//         sessionStorage.setItem("multiAccountLogin", "true");
+//       }
+
+//       await socialLogin(provider);
+//       // Let OAuth redirect back automatically
+//     } catch (err) {
+//       console.error("Social login error:", err);
+
+//       // Handle specific error cases
+//       if (
+//         err.message.includes("signup_disabled") ||
+//         err.message.includes("User not found")
+//       ) {
+//         toast.error(
+//           <div className="flex items-center gap-2">
+//             <AlertCircle className="w-4 h-4" />
+//             <span>Account doesn't exist. Please create an account first.</span>
+//           </div>,
+//           {
+//             autoClose: 5000,
+//             closeOnClick: true,
+//           }
+//         );
+//       } else {
+//         toast.error(err.message || "Social login failed");
+//       }
+//     } finally {
+//       setSocialLoading(null);
+//     }
+//   };
+
+//   const handleMagicLink = async () => {
+//     if (!email || email.trim() === "") {
+//       toast.error("Please enter your email.");
+//       return;
+//     }
+
+//     setIsSubmitting(true);
+
+//     try {
+//       const { data, error } = await authClient.signIn.magicLink({
+//         email: email,
+//         errorCallbackURL: "/login",
+//       });
+
+//       if (error) throw error;
+
+//       toast.success("Magic link sent! Check your email.");
+//     } catch (error) {
+//       toast.error(error.message || "Failed to send magic link.");
+//     } finally {
+//       setIsSubmitting(false);
+//     }
+//   };
+
+//   if (authLoading) {
+//     return <Loading fullscreen message="Loading ....." />;
+//   }
+
+//   if (user && !isMultiAccount) {
+//     return <Loading fullscreen message="Redirecting..." />;
+//   }
+
+//   return (
+//     <main className="min-h-screen flex items-center justify-center bg-linear-to-br from-primary/5 via-secondary/5 to-accent/5 px-4 py-8">
+//       {/* 🌟 Enhanced Background Effects */}
+//       <div className="absolute inset-0 overflow-hidden">
+//         <div className="absolute -top-40 -right-40 w-80 h-80 bg-primary/10 rounded-full blur-3xl"></div>
+//         <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-secondary/10 rounded-full blur-3xl"></div>
+//         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-accent/5 rounded-full blur-3xl"></div>
+//       </div>
+
+//       {/* 🎨 Enhanced Login Card */}
+//       <section className="card w-full max-w-2xl bg-linear-to-br from-base-100 to-base-200 border border-base-300/30 shadow-2xl backdrop-blur-lg rounded-3xl transition-all duration-500 hover:shadow-3xl z-10">
+//         <div className="card-body p-8 space-y-8">
+//           {/* 🌟 Enhanced Header */}
+//           <div className="text-center space-y-4">
+//             <div className="flex justify-center">
+//               <div className="p-4 rounded-2xl bg-linear-to-br from-primary to-primary/80 text-primary-content shadow-lg">
+//                 {isMultiAccount ? (
+//                   <UserPlus className="w-8 h-8" />
+//                 ) : (
+//                   <Shield className="w-8 h-8" />
+//                 )}
+//               </div>
+//             </div>
+//             <div className="space-y-2">
+//               <h1 className="text-3xl font-bold bg-linear-to-r from-base-content to-base-content/70 bg-clip-text text-transparent">
+//                 {isMultiAccount ? t("Add Another Account") : t("Welcome Back")}
+//               </h1>
+//               <p className="text-base-content/70 text-lg">
+//                 {isMultiAccount
+//                   ? t("Sign in with a different account")
+//                   : t("Sign in to your account")}
+//               </p>
+//             </div>
+//           </div>
+
+//           {/* Social Login Section */}
+//           {(googleEnabled || githubEnabled) && (
+//             <div className="space-y-4">
+//               <div className="flex gap-4 justify-center">
+//                 {googleEnabled && (
+//                   <button
+//                     type="button"
+//                     onClick={() => handleSocialSignup("google")}
+//                     disabled={isSubmitting || socialLoading}
+//                     className="group flex-1 max-w-[140px] p-4 rounded-2xl border border-base-300/60 
+//                              hover:border-primary/30 bg-base-100 hover:bg-primary/5 
+//                              transition-all duration-300 hover:shadow-lg hover:-translate-y-1 
+//                              disabled:opacity-50 flex flex-col items-center gap-3"
+//                   >
+//                     <div className="relative">
+//                       {socialLoading === "google" ? (
+//                         <Loader2 className="w-6 h-6 animate-spin text-primary" />
+//                       ) : (
+//                         <svg viewBox="0 0 24 24" className="w-6 h-6">
+//                           <path
+//                             fill="#4285F4"
+//                             d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+//                           />
+//                           <path
+//                             fill="#34A853"
+//                             d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+//                           />
+//                           <path
+//                             fill="#FBBC05"
+//                             d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+//                           />
+//                           <path
+//                             fill="#EA4335"
+//                             d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+//                           />
+//                         </svg>
+//                       )}
+//                     </div>
+//                     <span className="text-xs font-medium text-base-content/80 group-hover:text-base-content">
+//                       Google
+//                     </span>
+//                   </button>
+//                 )}
+
+//                 {githubEnabled && (
+//                   <button
+//                     type="button"
+//                     onClick={() => handleSocialSignup("github")}
+//                     disabled={isSubmitting || socialLoading}
+//                     className="group flex-1 max-w-[140px] p-4 rounded-2xl border border-base-300/60 
+//                              hover:border-base-content/30 bg-base-100 hover:bg-base-content/5 
+//                              transition-all duration-300 hover:shadow-lg hover:-translate-y-1 
+//                              disabled:opacity-50 flex flex-col items-center gap-3"
+//                   >
+//                     <div className="relative">
+//                       {socialLoading === "github" ? (
+//                         <Loader2 className="w-6 h-6 animate-spin" />
+//                       ) : (
+//                         <svg
+//                           className="w-6 h-6 text-base-content group-hover:text-base-content/80"
+//                           viewBox="0 0 24 24"
+//                           fill="currentColor"
+//                         >
+//                           <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+//                         </svg>
+//                       )}
+//                     </div>
+//                     <span className="text-xs font-medium text-base-content/80 group-hover:text-base-content">
+//                       GitHub
+//                     </span>
+//                   </button>
+//                 )}
+//               </div>
+//             </div>
+//           )}
+
+//           {/* Divider */}
+//           {(googleEnabled || githubEnabled) && (
+//             <div className="relative">
+//               <div className="absolute inset-0 flex items-center">
+//                 <div className="w-full border-t border-base-300/60"></div>
+//               </div>
+//               <div className="relative flex justify-center text-sm">
+//                 <span className="px-4 bg-base-100 text-base-content/50 text-sm font-medium">
+//                   Or continue with email
+//                 </span>
+//               </div>
+//             </div>
+//           )}
+
+//           {/* 📝 Enhanced Login Form */}
+//           <form onSubmit={handleSubmit} className="space-y-5">
+//             {/* Email Field */}
+//             <div className="form-control">
+//               <label className="label">
+//                 <span className="label-text font-semibold text-base-content flex items-center gap-2">
+//                   <Mail className="w-4 h-4 text-primary" />
+//                   {t("Email Address")}
+//                 </span>
+//               </label>
+//               <div className="relative">
+//                 <input
+//                   id="email"
+//                   type="email"
+//                   value={email}
+//                   onChange={(e) => setEmail(e.target.value)}
+//                   className="input input-bordered w-full rounded-xl pl-10 focus:ring-2 focus:ring-primary/50 bg-base-200/50 transition-all duration-200"
+//                   placeholder="admin@example.com"
+//                   required
+//                   disabled={isSubmitting || loginLoading}
+//                 />
+//                 <User className="w-4 h-4 text-base-content/40 absolute left-3 top-1/2 transform -translate-y-1/2" />
+//               </div>
+//             </div>
+
+//             {/* Password Field */}
+//             <div className="form-control">
+//               <label className="label">
+//                 <span className="label-text font-semibold text-base-content flex items-center gap-2">
+//                   <Lock className="w-4 h-4 text-primary" />
+//                   {t("Password")}
+//                 </span>
+//               </label>
+//               <div className="relative">
+//                 <input
+//                   id="password"
+//                   type={showPassword ? "text" : "password"}
+//                   value={password}
+//                   onChange={(e) => setPassword(e.target.value)}
+//                   className="input input-bordered w-full rounded-xl pl-10 pr-10 focus:ring-2 focus:ring-primary/50 bg-base-200/50 transition-all duration-200"
+//                   placeholder={t("Enter your password")}
+//                   required
+//                   disabled={isSubmitting || loginLoading}
+//                 />
+//                 <Key className="w-4 h-4 text-base-content/40 absolute left-3 top-1/2 transform -translate-y-1/2" />
+//                 <button
+//                   type="button"
+//                   onClick={() => setShowPassword(!showPassword)}
+//                   className="absolute right-3 top-1/2 transform -translate-y-1/2 text-base-content/40 hover:text-base-content/70 transition-colors"
+//                   disabled={isSubmitting || loginLoading}
+//                 >
+//                   {showPassword ? (
+//                     <EyeOff className="w-4 h-4" />
+//                   ) : (
+//                     <Eye className="w-4 h-4" />
+//                   )}
+//                 </button>
+//               </div>
+//             </div>
+
+//             {/* Enhanced Submit Button */}
+//             <div className="space-y-3">
+//               <button
+//                 type="submit"
+//                 disabled={isSubmitting || loginLoading}
+//                 className="btn btn-primary w-full rounded-xl"
+//               >
+//                 {isSubmitting ? "Signing in..." : "Sign In"}
+//               </button>
+
+//               <button
+//                 type="button"
+//                 onClick={handleMagicLink}
+//                 disabled={isSubmitting}
+//                 className="btn btn-secondary w-full rounded-xl"
+//               >
+//                 Send Magic Link
+//               </button>
+//             </div>
+//           </form>
+
+//           {/* Enhanced Footer Links */}
+//           <div className="space-y-4 text-center">
+//             <div className="flex flex-col justify-center items-center gap-2 text-sm">
+//               <p className="text-base-content/70">
+//                 {t("Don't have an account?")}
+//               </p>
+//               <button
+//                 type="button"
+//                 onClick={() => router.replace("/signup")}
+//                 className="text-primary font-semibold hover:underline cursor-pointer transition-colors duration-200"
+//               >
+//                 {t("Create account")}
+//               </button>
+//             </div>
+
+//             <div className="pt-2 border-t border-base-300/30">
+//               <button
+//                 type="button"
+//                 onClick={() => router.replace("/request-password-reset")}
+//                 className="text-primary font-semibold hover:underline cursor-pointer text-sm transition-colors duration-200"
+//               >
+//                 {t("Forgot your password?")}
+//               </button>
+//             </div>
+//           </div>
+
+//           {/* 🔒 Security Features */}
+//           <div className="space-y-4 pt-4 border-t border-base-300/30">
+//             {/* Security Tips */}
+//             <div className="bg-primary/5 rounded-2xl p-4 border border-primary/20">
+//               <div className="flex items-start gap-3">
+//                 <Sparkles className="w-4 h-4 text-primary mt-0.5 shrink-0" />
+//                 <div>
+//                   <p className="text-sm font-semibold text-primary mb-1">
+//                     {isMultiAccount
+//                       ? t("Multi-Account Login")
+//                       : t("Secure Login")}
+//                   </p>
+//                   <p className="text-xs text-base-content/70">
+//                     {isMultiAccount
+//                       ? t(
+//                           "You can switch between multiple accounts without logging out."
+//                         )
+//                       : t(
+//                           "Your security is our priority. All data is encrypted and protected."
+//                         )}
+//                   </p>
+//                 </div>
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+//       </section>
+//     </main>
+//   );
+// };
+
+// export default LoginPage;

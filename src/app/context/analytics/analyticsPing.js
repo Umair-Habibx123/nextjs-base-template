@@ -8,7 +8,7 @@ export default function AnalyticsPing() {
 
   useEffect(() => {
     const ref = typeof document !== "undefined" ? document.referrer : "";
-    fetch("/api/admin/analytics-api", {
+    fetch("/api/super-admin/analytics-api", {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ path: pathname, referrer: ref }),

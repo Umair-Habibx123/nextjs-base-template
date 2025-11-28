@@ -13,7 +13,7 @@ import {
   Shield,
   Send,
 } from "lucide-react";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import Link from "next/link";
 
 const RequestPasswordResetPage = () => {
@@ -52,7 +52,6 @@ const RequestPasswordResetPage = () => {
   if (isSuccess) {
     return (
       <main className="min-h-screen flex items-center justify-center bg-linear-to-br from-primary/5 via-secondary/5 to-accent/5 px-4 py-8">
-        <ToastContainer />
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute -top-40 -right-40 w-80 h-80 bg-success/10 rounded-full blur-3xl"></div>
           <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-primary/10 rounded-full blur-3xl"></div>
@@ -81,7 +80,7 @@ const RequestPasswordResetPage = () => {
 
             <div className="space-y-4 pt-4">
               <button
-                onClick={() => router.push("/login")}
+                onClick={() => router.replace("/login")}
                 className="btn btn-primary w-full rounded-xl"
               >
                 {t("Back to Login")}
@@ -105,7 +104,6 @@ const RequestPasswordResetPage = () => {
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-linear-to-br from-primary/5 via-secondary/5 to-accent/5 px-4 py-8">
-      <ToastContainer />
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-primary/10 rounded-full blur-3xl"></div>
         <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-secondary/10 rounded-full blur-3xl"></div>

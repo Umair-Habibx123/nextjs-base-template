@@ -17,7 +17,7 @@ export default function TemplateDropdown({ selectedTemplate, onSelectTemplate })
   const loadTemplates = async () => {
     setLoading(true);
     try {
-      const res = await fetch("/api/email-templates");
+      const res = await fetch("/api/public/email-templates");
       const data = await res.json();
       if (data.success) setTemplates(data.templates);
       else throw new Error();

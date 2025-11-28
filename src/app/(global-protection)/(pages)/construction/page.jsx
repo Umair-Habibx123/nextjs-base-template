@@ -9,7 +9,7 @@ export default function ConstructionPage() {
 
   useEffect(() => {
     async function check() {
-      const res = await fetch("/api/admin/settings/global", {
+      const res = await fetch("/api/super-admin/settings/global", {
         cache: "no-store",
       });
 

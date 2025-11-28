@@ -3,13 +3,11 @@
 import React from "react";
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
-import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const UserLayout = ({ children }) => {
   return (
     <div className="min-h-screen flex flex-col bg-linear-to-br from-base-100 to-base-200 overflow-x-hidden">
-      <ToastContainer />
       <Header />
 
       {/* 🔹 Add padding equal to header height */}

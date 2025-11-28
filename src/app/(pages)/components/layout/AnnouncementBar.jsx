@@ -11,10 +11,10 @@ const AnnouncementBar = () => {
     const fetchAll = async () => {
       try {
         const [ann, set] = await Promise.all([
-          fetch("/api/admin/announcements", { cache: "no-store" }).then((r) =>
+          fetch("/api/super-admin/announcements", { cache: "no-store" }).then((r) =>
             r.json()
           ),
-          fetch("/api/admin/announcements/announcement-settings", {
+          fetch("/api/super-admin/announcements/announcement-settings", {
             cache: "no-store",
           }).then((r) => r.json()),
         ]);

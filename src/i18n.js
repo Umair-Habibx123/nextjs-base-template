@@ -25,7 +25,7 @@ async function loadTranslations() {
   if (typeof window === "undefined") return;
 
   try {
-    const res = await fetch("/api/admin/translations");
+    const res = await fetch("/api/super-admin/languages");
     const data = await res.json();
 
     if (data.success && data.data) {

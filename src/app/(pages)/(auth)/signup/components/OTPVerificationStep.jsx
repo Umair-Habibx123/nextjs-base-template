@@ -1,6 +1,7 @@
 // src/app/(pages)/signup/components/OTPVerificationStep.jsx
 import React, { useState, useRef, useEffect } from "react";
 import { ShieldCheck, CheckCircle2, Loader2 } from "lucide-react";
+import { toast } from "react-toastify";
 
 const OTPVerificationStep = ({
   email,
@@ -8,6 +9,7 @@ const OTPVerificationStep = ({
   onResendOtp,
   isSubmitting,
   otpVerified,
+  otpSent = false,
 }) => {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const inputRefs = useRef([]);
@@ -51,10 +53,10 @@ const OTPVerificationStep = ({
     if (pastedNumbers.length === 6) {
       const newOtp = pastedNumbers.split("");
       setOtp(newOtp);
-      
+
       // Focus the last input
       inputRefs.current[5].focus();
-      
+
       // Auto-submit
       setTimeout(() => handleSubmit(pastedNumbers), 100);
     }
@@ -77,12 +79,24 @@ const OTPVerificationStep = ({
         </div>
       </div>
 
-      <h3 className="text-2xl font-bold text-base-content">Verify Your Email</h3>
+      <h3 className="text-2xl font-bold text-base-content">
+        Verify Your Email
+      </h3>
 
-      <p className="text-base-content/70 mb-2">
-        We've sent a 6-digit verification code to
-      </p>
-      <p className="text-lg font-semibold text-primary mb-6">{email}</p>
+      <div className="space-y-2">
+        <p className="text-base-content/70">
+          {otpSent
+            ? "We've sent a 6-digit verification code to"
+            : "Sending verification code to..."}
+        </p>
+        <p className="text-lg font-semibold text-primary mb-6">{email}</p>
+        {!otpSent && (
+          <div className="flex items-center justify-center gap-2 text-warning">
+            <Loader2 className="w-4 h-4 animate-spin" />
+            <span className="text-sm">Sending code...</span>
+          </div>
+        )}
+      </div>
 
       {/* OTP Input Boxes */}
       <div className="flex justify-center gap-3 mb-6">
@@ -107,7 +121,12 @@ const OTPVerificationStep = ({
       <button
         type="button"
         onClick={() => handleSubmit()}
-        disabled={isSubmitting || otpVerified || otp.some(digit => digit === "")}
+        disabled={
+          isSubmitting ||
+          otpVerified ||
+          otp.some((digit) => digit === "") ||
+          !otpSent // Disable if OTP not sent yet
+        }
         className="btn btn-primary w-full max-w-xs rounded-xl flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {isSubmitting ? (
@@ -121,21 +140,21 @@ const OTPVerificationStep = ({
           ? "Verified"
           : isSubmitting
           ? "Verifying..."
+          : !otpSent
+          ? "Sending OTP..."
           : "Verify OTP"}
       </button>
 
       {/* Resend OTP */}
       <div className="text-center">
-        <p className="text-base-content/60 mb-2">
-          Didn't receive the code?
-        </p>
+        <p className="text-base-content/60 mb-2">Didn't receive the code?</p>
         <button
           type="button"
           onClick={onResendOtp}
-          disabled={isSubmitting}
+          disabled={isSubmitting || !otpSent}
           className="btn btn-link text-primary hover:no-underline"
         >
-          Resend OTP
+          {isSubmitting ? "Sending..." : "Resend OTP"}
         </button>
       </div>
     </div>

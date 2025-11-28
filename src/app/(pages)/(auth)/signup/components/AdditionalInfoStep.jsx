@@ -12,6 +12,7 @@ import {
   Camera,
 } from "lucide-react";
 import slugify from "slugify";
+import { toast } from "react-toastify";
 
 // Icon mapping for dynamic fields
 const iconMap = {
@@ -42,6 +43,45 @@ const AdditionalInfoStep = ({
 }) => {
   const [logoPreview, setLogoPreview] = useState(null);
   const [slugManuallyEdited, setSlugManuallyEdited] = useState(false);
+
+  const validateAdditionalInfo = () => {
+    for (const field of additionalFields) {
+      const value = formData[field.name];
+
+      // Required field
+      if (field.required && (!value || value === "")) {
+        toast.error(`${field.label} is required`);
+        return false;
+      }
+
+      // Pattern validation (phone, slug, etc.)
+      if (field.validation?.pattern) {
+        const regex = new RegExp(field.validation.pattern);
+        if (!regex.test(value)) {
+          toast.error(field.validation.message || `${field.label} is invalid`);
+          return false;
+        }
+      }
+
+      // Min / max (age)
+      if (
+        field.validation?.min !== undefined &&
+        Number(value) < field.validation.min
+      ) {
+        toast.error(field.validation.message);
+        return false;
+      }
+      if (
+        field.validation?.max !== undefined &&
+        Number(value) > field.validation.max
+      ) {
+        toast.error(field.validation.message);
+        return false;
+      }
+    }
+
+    return true;
+  };
 
   const createSlug = (text) => {
     return slugify(text || "", {
@@ -424,7 +464,7 @@ const AdditionalInfoStep = ({
           {additionalInfoOptional && selectedRole !== "org_superadmin" && (
             <button
               type="button"
-              onClick={() => handleFinalRegistration(true)} // Pass true to skip additional info
+              onClick={() => onFinalRegistration(true)} // Pass true to skip additional info
               disabled={isSubmitting}
               className="btn btn-warning rounded-xl flex items-center gap-2"
             >
@@ -434,7 +474,11 @@ const AdditionalInfoStep = ({
 
           <button
             type="button"
-            onClick={() => onFinalRegistration(false)} // Pass false to include additional info
+            onClick={() => {
+              if (validateAdditionalInfo()) {
+                onFinalRegistration(false);
+              }
+            }}
             disabled={
               isSubmitting ||
               (selectedRole === "org_superadmin" &&

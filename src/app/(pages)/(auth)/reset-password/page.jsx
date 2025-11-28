@@ -17,7 +17,7 @@ import {
   AlertTriangle,
   ArrowLeft,
 } from "lucide-react";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import Link from "next/link";
 
 // Token management utilities
@@ -85,7 +85,7 @@ const tokenManager = {
         // Handle errors from URL
         if (errorParam === "INVALID_TOKEN") {
           toast.error(t("Reset link is invalid or has expired"));
-          router.push("/request-password-reset");
+          router.replace("/request-password-reset");
           resolve(false);
           return;
         }
@@ -99,7 +99,7 @@ const tokenManager = {
         // Validate token format (basic check)
         if (tokenParam.length < 10) {
           toast.error(t("Invalid token format"));
-          router.push("/request-password-reset");
+          router.replace("/request-password-reset");
           resolve(false);
           return;
         }
@@ -154,14 +154,14 @@ const ResetPasswordPage = () => {
         // If no valid token and no token in URL, redirect immediately
         if (!tokenValid && !searchParams.get("token")) {
           toast.error(t("Reset token required to access this page"));
-          router.push("/request-password-reset");
+          router.replace("/request-password-reset");
           return;
         }
       } catch (error) {
         console.error("Token initialization failed:", error);
         setHasValidToken(false);
         toast.error(t("Failed to initialize reset token"));
-        router.push("/request-password-reset");
+        router.replace("/request-password-reset");
       } finally {
         setIsValidatingToken(false);
       }
@@ -269,7 +269,7 @@ const ResetPasswordPage = () => {
           t("Reset token has expired. Please request a new reset link.")
         );
         setHasValidToken(false);
-        router.push("/request-password-reset");
+        router.replace("/request-password-reset");
         return;
       }
 
@@ -286,7 +286,16 @@ const ResetPasswordPage = () => {
           toast.error(t("Reset token is invalid or has expired"));
           tokenManager.clearToken();
           setHasValidToken(false);
-          router.push("/request-password-reset");
+          router.replace("/request-password-reset");
+          return;
+        }
+        if (error) {
+          // check for the "PASSWORD_COMPROMISED" code
+          if (error.code === "PASSWORD_COMPROMISED") {
+            toast.error(
+              "That password appears in a known breach. Please choose a brand-new password you haven’t used elsewhere."
+            );
+          }
           return;
         }
         toast.error(error.message || t("Failed to reset password"));
@@ -306,7 +315,7 @@ const ResetPasswordPage = () => {
 
       // Redirect to login after 3 seconds
       setTimeout(() => {
-        router.push("/login");
+        router.replace("/login");
       }, 3000);
     } catch (error) {
       console.error("Password reset error:", error);
@@ -320,7 +329,6 @@ const ResetPasswordPage = () => {
   if (isValidatingToken) {
     return (
       <main className="min-h-screen flex items-center justify-center bg-linear-to-br from-primary/5 via-secondary/5 to-accent/5 px-4 py-8">
-        <ToastContainer />
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute -top-40 -right-40 w-80 h-80 bg-primary/10 rounded-full blur-3xl"></div>
           <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-secondary/10 rounded-full blur-3xl"></div>
@@ -351,7 +359,6 @@ const ResetPasswordPage = () => {
   if (!hasValidToken && !isSuccess) {
     return (
       <main className="min-h-screen flex items-center justify-center bg-linear-to-br from-primary/5 via-error/5 to-accent/5 px-4 py-8">
-        <ToastContainer />
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute -top-40 -right-40 w-80 h-80 bg-error/10 rounded-full blur-3xl"></div>
           <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-primary/10 rounded-full blur-3xl"></div>
@@ -399,7 +406,6 @@ const ResetPasswordPage = () => {
   if (isSuccess) {
     return (
       <main className="min-h-screen flex items-center justify-center bg-linear-to-br from-primary/5 via-success/5 to-accent/5 px-4 py-8">
-        <ToastContainer />
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute -top-40 -right-40 w-80 h-80 bg-success/10 rounded-full blur-3xl"></div>
           <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-primary/10 rounded-full blur-3xl"></div>
@@ -439,7 +445,6 @@ const ResetPasswordPage = () => {
   // Only render the reset form if we have a valid token
   return (
     <main className="min-h-screen flex items-center justify-center bg-linear-to-br from-primary/5 via-secondary/5 to-accent/5 px-4 py-8">
-      <ToastContainer />
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-primary/10 rounded-full blur-3xl"></div>
         <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-secondary/10 rounded-full blur-3xl"></div>
@@ -511,11 +516,7 @@ const ResetPasswordPage = () => {
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 text-base-content/40 hover:text-base-content/70 transition-colors"
                   disabled={isSubmitting}
                 >
-                  {showNewPassword ? (
-                    <EyeOff className="w-4 h-4" />
-                  ) : (
-                    <Eye className="w-4 h-4" />
-                  )}
+                  {showNewPassword ? <EyeOff /> : <Eye />}
                 </button>
               </div>
 
@@ -597,11 +598,7 @@ const ResetPasswordPage = () => {
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 text-base-content/40 hover:text-base-content/70 transition-colors"
                   disabled={isSubmitting}
                 >
-                  {showConfirmPassword ? (
-                    <EyeOff className="w-4 h-4" />
-                  ) : (
-                    <Eye className="w-4 h-4" />
-                  )}
+                  {showConfirmPassword ? <EyeOff /> : <Eye />}
                 </button>
               </div>
               {confirmPassword && (

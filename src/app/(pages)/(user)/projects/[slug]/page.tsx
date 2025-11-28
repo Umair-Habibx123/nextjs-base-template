@@ -43,7 +43,7 @@ export default function ProjectDetailPage() {
 
   useEffect(() => {
     if (!slug) return;
-    fetch(`/api/projects/${slug}`)
+    fetch(`/api/user/projects/${slug}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {

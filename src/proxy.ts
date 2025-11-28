@@ -8,7 +8,7 @@ export async function proxy(req: NextRequest) {
 
   if (
     pathname.startsWith("/admin-auth") ||
-    pathname.startsWith("/admin-dashboard") ||
+    pathname.startsWith("/super-admin-dashboard") ||
     pathname.startsWith("/api") ||
     pathname.startsWith("/_next") ||
     pathname.startsWith("/static") ||

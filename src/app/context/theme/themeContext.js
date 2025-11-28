@@ -4,13 +4,12 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
-  const [theme, setTheme] = useState("retro");
+  const [theme, setTheme] = useState("light");
   const [previewTheme, setPreviewTheme] = useState(null);
   const [mounted, setMounted] = useState(false);
   const [availableThemes, setAvailableThemes] = useState(["light", "dark"]);
   const [customThemes, setCustomThemes] = useState({});
   const [visibleThemes, setVisibleThemes] = useState({});
-
 
   const defaultThemeSchema = {
     "--color-base-100": "#ffffff",
@@ -38,7 +37,9 @@ export const ThemeProvider = ({ children }) => {
   };
 
   async function fetchThemes() {
-    const res = await fetch("/api/theme-settings", { cache: "no-store" });
+    const res = await fetch("/api/super-admin/theme-settings", {
+      cache: "no-store",
+    });
     if (!res.ok) throw new Error("Failed to load themes");
     return res.json();
   }
@@ -48,7 +49,7 @@ export const ThemeProvider = ({ children }) => {
   const saveThemeToDbDebounced = (name, vars, visible = true) => {
     clearTimeout(saveTimer);
     saveTimer = setTimeout(() => {
-      fetch("/api/theme-settings", {
+      fetch("/api/super-admin/theme-settings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, vars, visible }),
@@ -57,9 +58,12 @@ export const ThemeProvider = ({ children }) => {
   };
 
   async function deleteThemeFromDb(name) {
-    await fetch(`/api/theme-settings?name=${encodeURIComponent(name)}`, {
-      method: "DELETE",
-    });
+    await fetch(
+      `/api/super-admin/theme-settings?name=${encodeURIComponent(name)}`,
+      {
+        method: "DELETE",
+      }
+    );
   }
 
   useEffect(() => {
@@ -110,23 +114,22 @@ export const ThemeProvider = ({ children }) => {
   }, [theme, mounted]);
 
   useEffect(() => {
-  if (!mounted) return;
+    if (!mounted) return;
 
-  // Always update the data-theme attr so DaisyUI built-ins apply instantly
-  document.documentElement.setAttribute("data-theme", previewTheme || theme);
+    // Always update the data-theme attr so DaisyUI built-ins apply instantly
+    document.documentElement.setAttribute("data-theme", previewTheme || theme);
 
-  // If it's a custom theme, apply vars
-  const activeTheme = previewTheme || theme;
-  if (customThemes[activeTheme]) {
-    applyThemeVars(customThemes[activeTheme]);
-  } else {
-    // Reset inline vars so built-ins fully take over
-    Object.keys(defaultThemeSchema).forEach((key) =>
-      document.documentElement.style.removeProperty(key)
-    );
-  }
-}, [previewTheme, theme, customThemes, mounted]);
-
+    // If it's a custom theme, apply vars
+    const activeTheme = previewTheme || theme;
+    if (customThemes[activeTheme]) {
+      applyThemeVars(customThemes[activeTheme]);
+    } else {
+      // Reset inline vars so built-ins fully take over
+      Object.keys(defaultThemeSchema).forEach((key) =>
+        document.documentElement.style.removeProperty(key)
+      );
+    }
+  }, [previewTheme, theme, customThemes, mounted]);
 
   const addTheme = async (name, vars = {}) => {
     if (!name) return;
@@ -207,59 +210,58 @@ export const ThemeProvider = ({ children }) => {
   };
 
   const renameTheme = async (oldName, newName) => {
-  if (!oldName || !newName || ["light", "dark"].includes(oldName)) return;
+    if (!oldName || !newName || ["light", "dark"].includes(oldName)) return;
 
-  // Prevent duplicate names
-  if (customThemes[newName]) {
-    throw new Error("Theme name already exists");
-  }
+    // Prevent duplicate names
+    if (customThemes[newName]) {
+      throw new Error("Theme name already exists");
+    }
 
-  const themeVars = customThemes[oldName];
-  if (!themeVars) return;
+    const themeVars = customThemes[oldName];
+    if (!themeVars) return;
 
-  // ✅ Update DB
-  const res = await fetch("/api/theme-settings", {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ oldName, newName }),
-  });
+    // ✅ Update DB
+    const res = await fetch("/api/super-admin/theme-settings", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ oldName, newName }),
+    });
 
-  if (!res.ok) {
-    const err = await res.json();
-    throw new Error(err.error || "Failed to rename theme in DB");
-  }
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.error || "Failed to rename theme in DB");
+    }
 
-  // ✅ Update local state (immutably)
-  setCustomThemes((prev) => {
-    const updated = { ...prev };
-    delete updated[oldName];
-    updated[newName] = themeVars;
-    return updated;
-  });
+    // ✅ Update local state (immutably)
+    setCustomThemes((prev) => {
+      const updated = { ...prev };
+      delete updated[oldName];
+      updated[newName] = themeVars;
+      return updated;
+    });
 
-  setAvailableThemes((prev) => {
-    const updated = prev.filter((t) => t !== oldName);
-    return [...updated, newName];
-  });
+    setAvailableThemes((prev) => {
+      const updated = prev.filter((t) => t !== oldName);
+      return [...updated, newName];
+    });
 
-  setVisibleThemes((prev) => {
-    const updated = { ...prev };
-    updated[newName] = prev[oldName];
-    delete updated[oldName];
-    return updated;
-  });
+    setVisibleThemes((prev) => {
+      const updated = { ...prev };
+      updated[newName] = prev[oldName];
+      delete updated[oldName];
+      return updated;
+    });
 
-  // ✅ Update DOM <style> reference
-  const styleEl = document.getElementById(`theme-${oldName}`);
-  if (styleEl) styleEl.id = `theme-${newName}`;
+    // ✅ Update DOM <style> reference
+    const styleEl = document.getElementById(`theme-${oldName}`);
+    if (styleEl) styleEl.id = `theme-${newName}`;
 
-  // ✅ Reapply the theme vars so preview stays correct
-  injectCustomTheme(newName, themeVars);
+    // ✅ Reapply the theme vars so preview stays correct
+    injectCustomTheme(newName, themeVars);
 
-  if (theme === oldName) setTheme(newName);
-  if (previewTheme === oldName) setPreviewTheme(newName);
-};
-
+    if (theme === oldName) setTheme(newName);
+    if (previewTheme === oldName) setPreviewTheme(newName);
+  };
 
   const injectCustomTheme = (name, cssVars) => {
     if (typeof document === "undefined") return;
@@ -298,8 +300,8 @@ export const ThemeProvider = ({ children }) => {
         toggleVisibility,
         saveTheme,
         mounted,
-        applyThemeVars, 
-         renameTheme,
+        applyThemeVars,
+        renameTheme,
       }}
     >
       {children}

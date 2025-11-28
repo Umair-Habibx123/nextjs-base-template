@@ -4,11 +4,10 @@
 import React, { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "../../../context/auth/authContext";
-import { useSessionRedirect } from "../../../hooks/useSessionRedirect";
 import { useTranslation } from "react-i18next";
 import { authClient } from "@/lib/client";
-import { toast, ToastContainer } from "react-toastify";
-import Loading from "../../components/layout/Loading";
+import { toast } from "react-toastify";
+import { decrypt } from "@/utils/crypto";
 import {
   getSignupConfig,
   getSelfSignupRoles,
@@ -28,6 +27,9 @@ import {
 } from "lucide-react";
 
 const SignupPage = () => {
+  const { user, ensureSessionLimit, socialSignUp, setUser } = useAuth();
+
+  const searchParams = useSearchParams();
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedRole, setSelectedRole] = useState("customer");
 
@@ -64,7 +66,7 @@ const SignupPage = () => {
   // Initialize form data with dynamic fields
   const initialFormData = {
     // Step 1: Role Selection
-    role: "customer",
+    app_role: "customer",
 
     // Step 2: Basic Information
     name: "",
@@ -81,7 +83,7 @@ const SignupPage = () => {
 
   // Add dynamic fields to initial form data based on selected role
   useEffect(() => {
-    const newFormData = { ...initialFormData, role: selectedRole };
+    const newFormData = { ...initialFormData, app_role: selectedRole };
 
     additionalFields.forEach((field) => {
       newFormData[field.name] =
@@ -98,81 +100,37 @@ const SignupPage = () => {
   const [profilePreview, setProfilePreview] = useState(null);
   const [slugAvailable, setSlugAvailable] = useState(null);
   const [checkingSlug, setCheckingSlug] = useState(false);
-  const searchParams = useSearchParams();
 
-  const { user, authLoading } = useAuth();
   const router = useRouter();
   const { t } = useTranslation();
-  const { getRedirectUrl, clearRedirectUrl } = useSessionRedirect();
-
-  const socialConfig = JSON.parse(
-    process.env.NEXT_PUBLIC_SOCIAL_AUTH_CONFIG || "{}"
-  );
 
   useEffect(() => {
-    // Check if user just completed social signup and has additional fields
     if (user && additionalFields.length > 0) {
       const socialAuthComplete = searchParams.get("social_auth") === "complete";
 
-      if (socialAuthComplete) {
-        setCurrentStep(4); // Go to Additional Info step
-        // Clean up the URL
+      let stored = null;
+      if (typeof window !== "undefined") {
+        const encrypted = sessionStorage.getItem("signup_role");
+        stored = encrypted ? decrypt(encrypted) : null;
+      }
+
+      const socialRole = searchParams.get("role") || stored;
+
+      if (socialAuthComplete && socialRole) {
+        setSelectedRole(socialRole);
+        setFormData((prev) => ({ ...prev, app_role: socialRole }));
+        setCurrentStep(4);
+
+        sessionStorage.removeItem("signup_role");
+
         router.replace("/signup", { scroll: false });
       }
     }
   }, [user, searchParams, additionalFields.length]);
 
-  // Update handleSocialSignup to handle redirects properly
-  const handleSocialSignup = async (provider) => {
-    try {
-      setIsSubmitting(true);
-
-      if (provider === "google") {
-        // For Google, we'll handle the redirect manually to capture the return
-        const redirectUrl = `${window.location.origin}/signup?social_auth=complete`;
-
-        const { error } = await authClient.signIn.social({
-          provider: "google",
-          options: {
-            redirectTo: redirectUrl,
-          },
-        });
-
-        if (error) {
-          toast.error(error.message);
-          return;
-        }
-
-        // The page will redirect, so no need to update state here
-        return;
-      }
-
-      if (provider === "github") {
-        const redirectUrl = `${window.location.origin}/signup?social_auth=complete`;
-
-        const { error } = await authClient.signIn.social({
-          provider: "github",
-          options: {
-            redirectTo: redirectUrl,
-          },
-        });
-
-        if (error) {
-          toast.error(error.message);
-        }
-        return;
-      }
-    } catch (err) {
-      console.error(err);
-      toast.error("Social signup failed");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const handleRoleSelect = (role) => {
-    setSelectedRole(role);
-    setFormData((prev) => ({ ...prev, role }));
+  const handleRoleSelect = (app_role) => {
+    setSelectedRole(app_role);
+    setFormData((prev) => ({ ...prev, app_role }));
   };
 
   const handleInputChange = (field, value) => {
@@ -214,7 +172,7 @@ const SignupPage = () => {
     const data = new FormData();
     data.append("file", file);
 
-    const res = await fetch("/api/admin/upload", {
+    const res = await fetch("/api/public/upload", {
       method: "POST",
       body: data,
     });
@@ -272,6 +230,10 @@ const SignupPage = () => {
     if (currentStep === 2 && !validateStep1()) return;
 
     if (currentStep === 2) {
+      if (!(await ensureSessionLimit())) {
+        return false;
+      }
+
       setIsSubmitting(true);
       try {
         let profilePicUrl = null;
@@ -280,34 +242,24 @@ const SignupPage = () => {
           profilePicUrl = await uploadProfilePicture(formData.profilePic);
         }
 
-        // For organization roles, use admin create user
-        if (selectedRole === "org_superadmin") {
-          const { data, error } = await authClient.admin.createUser({
-            email: formData.email,
-            password: formData.password,
-            name: formData.name,
-            image: profilePicUrl,
-            role: selectedRole,
-          });
+        const { data, error } = await authClient.signUp.email({
+          email: formData.email,
+          password: formData.password,
+          name: formData.name,
+          image: profilePicUrl,
+          app_role: selectedRole,
+        });
 
-          if (error) {
+        if (error) {
+          // check for the "PASSWORD_COMPROMISED" code
+          if (error.code === "PASSWORD_COMPROMISED") {
+            toast.error(
+              "That password appears in a known breach. Please choose a brand-new password you haven’t used elsewhere."
+            );
+          } else {
             toast.error(error.message);
-            return;
           }
-        } else {
-          // For regular roles, use standard signup
-          const { data, error } = await authClient.admin.createUser({
-            email: formData.email,
-            password: formData.password,
-            name: formData.name,
-            image: profilePicUrl,
-            role: selectedRole,
-          });
-
-          if (error) {
-            toast.error(error.message);
-            return;
-          }
+          return;
         }
 
         // Send OTP
@@ -342,9 +294,12 @@ const SignupPage = () => {
   const handleOtpVerification = async (otp) => {
     setIsSubmitting(true);
     try {
+      const email = formData.email;
+      const password = formData.password;
+
       const { data, error } = await authClient.emailOtp.verifyEmail({
-        email: formData.email,
-        otp: otp,
+        email,
+        otp,
       });
 
       if (error) {
@@ -355,14 +310,26 @@ const SignupPage = () => {
       setOtpVerified(true);
       toast.success("Email verified successfully!");
 
-      // Always go to additional info step if there are additional fields
-      // Let the user decide whether to skip or fill them
+      const { data2, error2 } = await authClient.signIn.email({
+        email,
+        password,
+      });
+
+      if (error2) {
+        toast.error(error2.message);
+        return false;
+      }
+
+      const session = await authClient.getSession();
+      if (session?.data?.user) setUser(session.data.user);
+
+      // Move to next step
       if (additionalFields.length > 0) {
         setCurrentStep(4);
       } else {
-        // Only auto-complete if there are truly no additional fields
         await handleFinalRegistration();
       }
+
       return true;
     } catch (err) {
       console.error("OTP verification error:", err);
@@ -377,6 +344,13 @@ const SignupPage = () => {
   const handleFinalRegistration = async (skipAdditionalInfo = false) => {
     setIsSubmitting(true);
     try {
+      const finalEmail = formData.email || user?.email;
+
+      if (!finalEmail) {
+        toast.error("Unable to determine user email.");
+        return;
+      }
+
       // Handle organization creation for organization roles
       if (belongs_to_organization) {
         await handleOrganizationCreation();
@@ -399,7 +373,7 @@ const SignupPage = () => {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              email: formData.email,
+              email: finalEmail,
               data: dynamicData,
             }),
           });
@@ -412,8 +386,8 @@ const SignupPage = () => {
         }
       }
 
-      toast.success("Registration complete! Please login.");
-      router.push("/login");
+      toast.success("Registration complete!");
+      router.push("/");
     } catch (err) {
       console.error(err);
       toast.error("Registration failed");
@@ -522,8 +496,6 @@ const SignupPage = () => {
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-linear-to-br from-primary/5 via-secondary/5 to-accent/5 px-4 py-8">
-      <ToastContainer />
-
       {/* Background Effects */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-primary/10 rounded-full blur-3xl"></div>
@@ -618,7 +590,38 @@ const SignupPage = () => {
               onProfilePicChange={handleProfilePicChange}
               profilePreview={profilePreview}
               onNextStep={handleNextStep}
-              onSocialSignup={handleSocialSignup} // Add this prop
+              selectedRole={selectedRole}
+              // onSocialSignup={async (provider) => {
+              //   try {
+              //     setIsSubmitting(true);
+              //     await socialSignUp(provider, selectedRole);
+              //   } catch (err) {
+              //     toast.error(err.message || "Social signup failed");
+              //   } finally {
+              //     setIsSubmitting(false);
+              //   }
+              // }}
+              // In the main SignupPage component, update the socialSignUp handler:
+              onSocialSignup={async (provider, role) => {
+                try {
+                  if (!(await ensureSessionLimit())) {
+                    return false;
+                  }
+                  setIsSubmitting(true);
+                  // Store the selected role before social signup
+                  const signupRole = role || selectedRole;
+                  await socialSignUp(provider, signupRole);
+
+                  // After social signup, ensure we have the role context
+                  if (user && additionalFields.length > 0) {
+                    setCurrentStep(4);
+                  }
+                } catch (err) {
+                  toast.error(err.message || "Social signup failed");
+                } finally {
+                  setIsSubmitting(false);
+                }
+              }}
               isSubmitting={isSubmitting}
               t={t}
             />
@@ -631,6 +634,7 @@ const SignupPage = () => {
               onResendOtp={resendOtp}
               isSubmitting={isSubmitting}
               otpVerified={otpVerified}
+              otpSent={otpSent}
             />
           )}
 

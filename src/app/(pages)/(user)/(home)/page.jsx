@@ -4,18 +4,18 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useAuth } from "../../../context/auth/authContext";
 import { useTranslation } from "react-i18next";
-import { 
-  Smile, 
-  Info, 
-  X, 
-  Sparkles, 
-  Rocket, 
-  Shield, 
-  Users, 
+import {
+  Smile,
+  Info,
+  X,
+  Sparkles,
+  Rocket,
+  Shield,
+  Users,
   Zap,
   ArrowRight,
   Star,
-  CheckCircle
+  CheckCircle,
 } from "lucide-react";
 import Loading from "../../components/layout/Loading";
 
@@ -27,6 +27,18 @@ const HomePage = () => {
   const handleModalOpen = () => setShowModal(true);
   const handleModalClose = () => setShowModal(false);
 
+  const getDashboardLink = () => {
+    if (!user) return null;
+
+    if (user.role === "superadmin" && user.app_role === "superadmin") {
+      return "/super-admin-dashboard";
+    } else {
+      return `/dashboard/${user.app_role}`;
+    }
+  };
+
+  const dashboardLink = getDashboardLink();
+
   if (isLoading) {
     return <Loading fullscreen message="Loading..." />;
   }
@@ -35,18 +47,18 @@ const HomePage = () => {
     {
       icon: <Shield className="w-6 h-6" />,
       title: t("Secure & Reliable"),
-      description: t("Enterprise-grade security for your data")
+      description: t("Enterprise-grade security for your data"),
     },
     {
       icon: <Zap className="w-6 h-6" />,
       title: t("Lightning Fast"),
-      description: t("Optimized for performance and speed")
+      description: t("Optimized for performance and speed"),
     },
     {
       icon: <Users className="w-6 h-6" />,
       title: t("User Friendly"),
-      description: t("Intuitive interface for all users")
-    }
+      description: t("Intuitive interface for all users"),
+    },
   ];
 
   return (
@@ -68,7 +80,7 @@ const HomePage = () => {
                 <Rocket className="w-8 h-8" />
               </div>
             </div>
-            
+
             <div className="space-y-3">
               <h1 className="text-4xl md:text-5xl font-bold bg-linear-to-r from-base-content to-base-content/70 bg-clip-text text-transparent">
                 {user
@@ -77,8 +89,12 @@ const HomePage = () => {
               </h1>
               <p className="text-base-content/70 text-lg max-w-2xl mx-auto leading-relaxed">
                 {user
-                  ? t("You're successfully logged in and ready to manage your dashboard.")
-                  : t("Start your seamless experience with our modern, feature-rich platform.")}
+                  ? t(
+                      "You're successfully logged in and ready to manage your dashboard."
+                    )
+                  : t(
+                      "Start your seamless experience with our modern, feature-rich platform."
+                    )}
               </p>
             </div>
           </div>
@@ -86,7 +102,7 @@ const HomePage = () => {
           {/* 🌟 Features Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 py-6">
             {features.map((feature, index) => (
-              <div 
+              <div
                 key={index}
                 className="flex flex-col items-center text-center p-6 bg-base-200/50 rounded-2xl border border-base-300/20 hover:border-primary/30 transition-all duration-300 hover:scale-105 group"
               >
@@ -106,8 +122,8 @@ const HomePage = () => {
           {/* 🚀 Action Buttons */}
           <div className="space-y-4 pt-4">
             {user ? (
-              <Link 
-                href="/admin-dashboard" 
+              <Link
+                href={dashboardLink}
                 className="btn btn-primary btn-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 font-semibold w-full max-w-xs mx-auto flex items-center justify-center gap-3"
               >
                 <Sparkles className="w-5 h-5" />
@@ -115,8 +131,8 @@ const HomePage = () => {
                 <ArrowRight className="w-4 h-4" />
               </Link>
             ) : (
-              <Link 
-                href="/login" 
+              <Link
+                href="/login"
                 className="btn btn-primary btn-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 font-semibold w-full max-w-xs mx-auto flex items-center justify-center gap-3"
               >
                 <Rocket className="w-5 h-5" />
@@ -133,8 +149,6 @@ const HomePage = () => {
               {t("Learn More")}
             </button>
           </div>
-
-         
         </div>
       </section>
 
@@ -197,7 +211,9 @@ const HomePage = () => {
               <div className="flex items-center gap-4 p-4 bg-primary/5 rounded-2xl border border-primary/20">
                 <Sparkles className="w-6 h-6 text-primary shrink-0" />
                 <p className="text-sm text-base-content/70">
-                  {t("This platform is built with modern technologies to provide the best user experience.")}
+                  {t(
+                    "This platform is built with modern technologies to provide the best user experience."
+                  )}
                 </p>
               </div>
             </div>
@@ -212,8 +228,11 @@ const HomePage = () => {
               </button>
             </div>
           </div>
-          
-          <form method="dialog" className="modal-backdrop bg-base-content/50 backdrop-blur-sm transition-all">
+
+          <form
+            method="dialog"
+            className="modal-backdrop bg-base-content/50 backdrop-blur-sm transition-all"
+          >
             <button onClick={handleModalClose}>close</button>
           </form>
         </dialog>

@@ -21,7 +21,7 @@ const NewsletterSubscribe = ({
 
     setLoading(true);
     try {
-      const res = await fetch("/api/newsletter", {
+      const res = await fetch("/api/public/newsletter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
@@ -29,9 +29,15 @@ const NewsletterSubscribe = ({
       const data = await res.json();
       if (data.success) {
         onSubscribe?.(email);
-        toast.success(t("🎉 Successfully subscribed to our newsletter!"));
+        toast.success(
+          t("🎉Thanks for subscribing to our newsletter, {{email}}! ", {
+            email,
+          })
+        );
       } else {
-        toast.error(data.message || t("Subscription failed. Please try again."));
+        toast.error(
+          data.message || t("Subscription failed. Please try again.")
+        );
       }
     } catch (err) {
       toast.error(t("Something went wrong. Please try again later."));
@@ -52,9 +58,12 @@ const NewsletterSubscribe = ({
           {title || t("Stay Updated")}
         </h3>
       </div>
-      
+
       <p className="text-base-content/70 text-lg leading-relaxed">
-        {description || t("Get the latest updates, news, and exclusive tips straight to your inbox. No spam, ever.")}
+        {description ||
+          t(
+            "Get the latest updates, news, and exclusive tips straight to your inbox. No spam, ever."
+          )}
       </p>
 
       <form onSubmit={handleSubmit} className="space-y-3">

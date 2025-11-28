@@ -67,18 +67,13 @@ function saveToDatabase(keys) {
 
 function main() {
   const allFiles = getAllFiles(pagesDir);
-  console.log(`🔍 Found ${allFiles.length} page files`);
 
   const allKeys = new Set();
   for (const file of allFiles) {
     const keys = extractKeysFromFile(file);
     keys.forEach((k) => allKeys.add(k));
   }
-
-  console.log(`🧩 Extracted ${allKeys.size} unique translation keys`);
   saveToDatabase([...allKeys]);
-
-  console.log("✅ Extraction complete and database updated!");
 }
 
 main();

@@ -10,19 +10,19 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+
 /**
  * Send an email using a prepared HTML template.
  */
 export async function sendEmail(to, subject, html) {
   try {
     const info = await transporter.sendMail({
-      from: process.env.MAIL_DEFAULT_SENDER || process.env.MAIL_USERNAME,
+      from: process.env.MAIL_USERNAME,
       to,
       subject,
       html,
     });
 
-    console.log("✅ Email sent:", info.messageId);
     return { success: true };
   } catch (error) {
     console.error("❌ Email send failed:", error);

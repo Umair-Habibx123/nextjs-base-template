@@ -12,7 +12,6 @@ import {
   Download,
   Smartphone,
   Layout,
-  Eye,
   LayoutTemplate,
   Sparkles,
   Settings2,
@@ -89,7 +88,7 @@ const handleSave = async () => {
       mode: "email",
     });
 
-    const response = await fetch("/api/email-templates", {
+    const response = await fetch("/api/super-admin/email-templates", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

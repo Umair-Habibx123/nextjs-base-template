@@ -43,7 +43,7 @@ export default function BlogDetailPage() {
 
   useEffect(() => {
     if (!slug) return;
-    fetch(`/api/blogs/${slug}`)
+    fetch(`/api/user/blogs/${slug}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {

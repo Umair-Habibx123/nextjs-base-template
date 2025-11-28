@@ -43,7 +43,7 @@ export default function CaseStudiesDetailPage() {
 
   useEffect(() => {
     if (!slug) return;
-    fetch(`/api/case-studies/${slug}`)
+    fetch(`/api/user/case-studies/${slug}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {

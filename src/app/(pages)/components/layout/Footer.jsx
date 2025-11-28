@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import NewsletterSubscribe from "./NewsLetter";
-import { ToastContainer, toast } from "react-toastify";
+import {  toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Sparkles, Heart, Shield, Zap } from "lucide-react";
 
@@ -37,10 +37,7 @@ const Footer = () => {
     }
   ];
 
-  const handleSubscribe = (email) => {
-    toast.success(t("Thanks for subscribing, {{email}}!", { email }));
-  };
-
+  
   return (
     <>
       <footer className="bg-linear-to-br from-base-100 to-base-200 border-t border-base-300/30 mt-20 shadow-inner">
@@ -96,7 +93,7 @@ const Footer = () => {
           </div>
 
           {/* Newsletter */}
-          <NewsletterSubscribe onSubscribe={handleSubscribe} />
+          <NewsletterSubscribe />
         </div>
 
         {/* Copyright */}
@@ -133,22 +130,6 @@ const Footer = () => {
           </div>
         </div>
       </footer>
-
-      {/* Enhanced Toasts */}
-      <ToastContainer 
-        position="bottom-right" 
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        toastClassName="rounded-xl shadow-lg"
-        progressClassName="bg-linear-to-r from-primary to-secondary"
-      />
     </>
   );
 };

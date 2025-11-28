@@ -77,7 +77,7 @@ export default function ProjectsPage() {
 
   useEffect(() => {
     setLoading(true);
-    fetch(`/api/projects?page=${page}&limit=12`)
+    fetch(`/api/user/projects?page=${page}&limit=12`)
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {

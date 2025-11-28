@@ -85,7 +85,7 @@ You can reuse or extend:
 
 * **Components** → `src/app/components`
 * **Layouts** → `src/app/components/layout`
-* **Admin Modules** → `src/app/admin-dashboard`
+* **Admin Modules** → `src/app/super-admin-dashboard`
 * **APIs** → `src/app/api`
 
 ---
@@ -207,7 +207,7 @@ You can reuse or extend:
 
 * **Components** → `src/app/components`
 * **Layouts** → `src/app/components/layout`
-* **Admin Modules** → `src/app/admin-dashboard`
+* **Admin Modules** → `src/app/super-admin-dashboard`
 * **APIs** → `src/app/api`
 
 ---

@@ -77,7 +77,7 @@ export default function CaseStudiesPage() {
 
   useEffect(() => {
     setLoading(true);
-    fetch(`/api/case-studies?page=${page}&limit=12`)
+    fetch(`/api/user/case-studies?page=${page}&limit=12`)
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {

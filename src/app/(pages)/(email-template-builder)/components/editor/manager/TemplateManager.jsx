@@ -29,7 +29,7 @@ export default function TemplateManager({
   const loadTemplates = async () => {
     setLoading(true);
     try {
-      const res = await fetch("/api/email-templates");
+      const res = await fetch("/api/public/email-templates");
       const data = await res.json();
       if (data.success) setTemplates(data.templates);
     } catch (err) {
@@ -43,7 +43,7 @@ export default function TemplateManager({
     if (!newTemplateName.trim()) return toast.warning("Enter a template name");
     try {
       setCreating(true);
-      const res = await fetch("/api/email-templates", {
+      const res = await fetch("/api/super-admin/email-templates", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: newTemplateName, html: "", json: "{}" }),
@@ -83,7 +83,7 @@ export default function TemplateManager({
 
   const handleDelete = async (id) => {
     try {
-      await fetch("/api/email-templates", {
+      await fetch("/api/super-admin/email-templates", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id }),
